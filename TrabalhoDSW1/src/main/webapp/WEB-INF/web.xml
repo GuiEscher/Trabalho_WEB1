@@ -29,4 +29,14 @@
     <servlet-name>CadastrarPacienteServlet</servlet-name>
     <url-pattern>/CadastrarPacienteServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CadastrarMedicoServlet</display-name>
+    <servlet-name>CadastrarMedicoServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.CadastrarMedicoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CadastrarMedicoServlet</servlet-name>
+    <url-pattern>/CadastrarMedicoServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
