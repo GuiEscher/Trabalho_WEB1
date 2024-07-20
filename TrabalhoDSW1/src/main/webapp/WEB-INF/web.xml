@@ -19,4 +19,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>CadastrarPacienteServlet</display-name>
+    <servlet-name>CadastrarPacienteServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.CadastrarPacienteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CadastrarPacienteServlet</servlet-name>
+    <url-pattern>/CadastrarPacienteServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
