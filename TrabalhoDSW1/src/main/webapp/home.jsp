@@ -19,7 +19,7 @@
     </header>
     
     <div class="search-container">
-        <input type="text" name="Especialidade" placeholder="Pesquise uma especialidade">
+        <input type="text" name="Especialidade" placeholder="Pesquise uma especialidade" >
         <input type="submit">
     </div>
 

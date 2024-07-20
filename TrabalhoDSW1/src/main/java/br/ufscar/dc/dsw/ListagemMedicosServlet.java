@@ -19,33 +19,33 @@ public class ListagemMedicosServlet extends HttpServlet {
     private static List<Medico> listaMedicos = new ArrayList<>();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String especialidadeFiltro = request.getParameter("especialidade");
+        if (especialidadeFiltro == null) {
+            especialidadeFiltro = "";
+        }
+        
         try (Connection con = PostgreeDBConfig.getConnection()) {
-            // Consulta no SQL
-            String sql = "SELECT Nome, CRM, Especialidade FROM MEDICO";
+            String sql = "SELECT Nome, CRM, Email, Senha, Especialidade FROM MEDICO WHERE Especialidade LIKE ?";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                stmt.setString(1, "%" + especialidadeFiltro + "%"); 
                 ResultSet rs = stmt.executeQuery();
-                listaMedicos.clear(); 
+                listaMedicos.clear();
 
                 while (rs.next()) {
                     Medico aux = new Medico();
-
-                    // Usar os valores do ResultSet
                     aux.setNome(rs.getString("Nome"));
                     aux.setCRM(rs.getString("CRM"));
+                    aux.setEmail(rs.getString("Email"));
+                    aux.setSenha(rs.getString("Senha"));
                     aux.setEspecialidade(rs.getString("Especialidade"));
                     listaMedicos.add(aux);
-
-                    System.out.println(aux.getNome());
                 }
-                System.out.println("Listagem bem sucedida");
 
-                // Encaminha a requisição para a página JSP
                 request.setAttribute("Medicos", listaMedicos);
                 RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
                 rd.forward(request, response);
             }
         } catch (SQLException e) {
-            // Tratamento da excessão
             e.printStackTrace();
             System.out.println("Erro na listagem");
         }
