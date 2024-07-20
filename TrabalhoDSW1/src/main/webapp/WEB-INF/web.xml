@@ -39,4 +39,24 @@
     <servlet-name>CadastrarMedicoServlet</servlet-name>
     <url-pattern>/CadastrarMedicoServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ListagemMédicosServlet</display-name>
+    <servlet-name>ListagemMédicosServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.ListagemMédicosServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListagemMédicosServlet</servlet-name>
+    <url-pattern>/ListagemMédicosServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ListagemMedicosServlet</display-name>
+    <servlet-name>ListagemMedicosServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.ListagemMedicosServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListagemMedicosServlet</servlet-name>
+    <url-pattern>/ListagemMedicosServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
