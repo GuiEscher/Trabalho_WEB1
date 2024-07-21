@@ -19,31 +19,28 @@
     <header>
         <div class="header-container">
             <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;">Consultas.com - Bem vindo Administrador!</a></h1>
-            <a href="/home/listagemMedicos" class="button">Médicos</a>
+            <a href="/home/listagemPacientes" class="button">Pacientes</a>
             <a href="/home/logout" class="button">Logout</a>
         </div>
     </header>
 
-    <h2>Listagem de Pacientes</h2>
+    <h2>Listagem de Médicos</h2>
 
     <table>
         <tr>
-            <th>Nome do Paciente</th>
-            <th>CPF do Paciente</th>
-            <th>Data de Nascimento</th>
+            <th>Nome</th>
+            <th>CRM</th>
+            <th>Especialidade</th>
             <th>Email</th>
-            <th>Sexo</th>
-            <th>Telefone</th>
+
             <th>Configurações</th>
         </tr>
-        <c:forEach var="paciente" items="${Pacientes}">
+        <c:forEach var="medico" items="${Medicos}">
             <tr>
-                <td>${paciente.nome}</td>
-                <td>${paciente.CPF}</td>
-                <td>${paciente.data_nascimento}</td>
-                <td>${paciente.email}</td>
-                <td>${paciente.sexo}</td>
-                <td>${paciente.telefone}</td>
+                <td>${medico.nome}</td>
+                <td>${medico.CRM}</td>
+                <td>${medico.especialidade}</td>
+                <td>${medico.email}</td>
                 <td><a href="#">Edita</a> <a href="#">Remove</a></td>
             </tr>
         </c:forEach>
