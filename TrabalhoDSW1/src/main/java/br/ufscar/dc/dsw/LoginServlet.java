@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
           response.sendRedirect("/home/minhasConsultasMedico");
         } else {
         	// nao encontrou login
-        	System.out.println("Login não encontrado.");
+        	System.out.println("Login nÃ£o encontrado.");
             response.sendRedirect("paginaLogin.jsp?errorCode=1");
             return;
         }
