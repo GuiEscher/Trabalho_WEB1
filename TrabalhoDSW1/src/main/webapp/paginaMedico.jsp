@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <% String CRM= (String) request.getAttribute("CRM"); %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +11,10 @@
 	<title>Pagina do Medico</title>
 	</head>
 <body>
-	
-	CRM: <%=CRM %>
+	<%if (CRM == null) { %>
+		<c:redirect url="/paginaLogin.jsp?errorCode=1"/>
+	<%} else { %>
+		CRM: <%=CRM %>
+	<%} %>
 </body>
 </html>
