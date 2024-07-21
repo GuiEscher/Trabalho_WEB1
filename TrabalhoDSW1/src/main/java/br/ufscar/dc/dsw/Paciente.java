@@ -9,7 +9,7 @@ public class Paciente {
 	private String Senha;
 	private String Telefone;
 	private String Sexo;
-	private Date Data_nascimento;
+	private String Data_nascimento;
 	
 	public String getCPF() {
 		return CPF;
@@ -53,10 +53,10 @@ public class Paciente {
 		Sexo = sexo;
 	}
 	
-	public Date getData_nascimento() {
+	public String getData_nascimento() {
 		return Data_nascimento;
 	}
-	public void setData_nascimento(Date data_nascimento) {
+	public void setData_nascimento(String data_nascimento) {
 		Data_nascimento = data_nascimento;
 	}
 	

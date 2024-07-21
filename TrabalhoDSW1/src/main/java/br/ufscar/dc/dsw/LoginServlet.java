@@ -38,7 +38,7 @@ public class LoginServlet extends HttpServlet {
 		try (Connection con = PostgreeDBConfig.getConnection()){
 			String sql_paciente = "SELECT Email, Senha, CPF FROM PACIENTE";
 			String sql_medico = "SELECT Email, Senha, CRM FROM MEDICO";
-			String sql_admin = "SELECT Email, Senha FROM ADMIN";
+			String sql_admin = "SELECT Email, Senha, ADM_KEY FROM ADMIN";
 			
 		// Procurando em admin
 			try (PreparedStatement stmt_a = con.prepareStatement(sql_admin)) {
@@ -89,7 +89,7 @@ public class LoginServlet extends HttpServlet {
 		
 		if (foundAdmin == true) {
 	      	  session.setAttribute("ADM_KEY", id);
-	      	  response.sendRedirect("#");
+	      	  response.sendRedirect("/home/listagemPacientes");
 	    } else if (foundPaciente == true) {
       	  session.setAttribute("CPF", id);
       	  response.sendRedirect("/home/listaConsultasPaciente");

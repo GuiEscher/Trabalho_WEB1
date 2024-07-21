@@ -21,7 +21,7 @@ public class ListagemPacientesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try (Connection con = PostgreeDBConfig.getConnection()) {
-            String sql = "SELECT CPF, Nome, Email, Telefone FROM PACIENTE";
+            String sql = "SELECT CPF, Nome, Email, Telefone, Sexo, DataNascimento FROM PACIENTE";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
                 ResultSet rs = stmt.executeQuery();
                 listaPacientes.clear();
@@ -32,11 +32,13 @@ public class ListagemPacientesServlet extends HttpServlet {
                     aux.setNome(rs.getString("Nome"));
                     aux.setEmail(rs.getString("Email"));
                     aux.setTelefone(rs.getString("Telefone"));
+                    aux.setSexo(rs.getString("Sexo"));
+                    aux.setData_nascimento(rs.getString("DataNascimento"));
                     listaPacientes.add(aux);
                 }
 
                 request.setAttribute("Pacientes", listaPacientes);
-                RequestDispatcher rd = request.getRequestDispatcher("listagemPacientes.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("listagemPacientesAdm.jsp");
                 rd.forward(request, response);
             }
         } catch (SQLException e) {
