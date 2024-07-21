@@ -167,11 +167,16 @@
         </form>
 
         <%
-        	String CPF = "12345678910"; // Mudar depois
-        	session.setAttribute("CPF", CPF);
+            // Recuperar o atributo CPF da sessão
+            String CPF = (String) session.getAttribute("CPF");
+            if (CPF == null) {
+                CPF = ""; // Definir um valor padrão se CPF for nulo
+            }
+            // Colocar o CPF na sessão novamente (opcional)
+            session.setAttribute("CPF", CPF);
+			System.out.println(CPF + "CPF da session");
+            // Recuperar mensagens de erro e sucesso (se houver)
             String errorMessage = (String) request.getAttribute("errorMessage");
-        	//String CPF= (String) request.getAttribute("CPF");
-        	
             if (errorMessage != null) {
         %>
             <div class="error-message"><%= errorMessage %></div>
