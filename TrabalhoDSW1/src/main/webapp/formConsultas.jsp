@@ -167,7 +167,11 @@
         </form>
 
         <%
+        	String CPF = "12345678910"; // Mudar depois
+        	session.setAttribute("CPF", CPF);
             String errorMessage = (String) request.getAttribute("errorMessage");
+        	//String CPF= (String) request.getAttribute("CPF");
+        	
             if (errorMessage != null) {
         %>
             <div class="error-message"><%= errorMessage %></div>
