@@ -43,7 +43,7 @@
     <header>
         <div class="header-container">
             <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;">Consultas.com</a></h1>
-            <a href="/login" class="button">Login</a>
+            <a href="/home/paginaLogin.jsp" class="button">Login</a>
         </div>
     </header>
     
