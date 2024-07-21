@@ -59,4 +59,14 @@
     <servlet-name>ListagemMedicosServlet</servlet-name>
     <url-pattern>/ListagemMedicosServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>listagemConsultasMedicoServlet</display-name>
+    <servlet-name>listagemConsultasMedicoServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.listagemConsultasMedicoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>listagemConsultasMedicoServlet</servlet-name>
+    <url-pattern>/listagemConsultasMedicoServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

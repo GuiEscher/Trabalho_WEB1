@@ -26,7 +26,7 @@
     	<h2>Login</h2>
         <form action="${linkServletLogin}" method="post">
             Email: <input type="text" name="email"/>
-            Senha: <input type="text" name="senha"/>
+            Senha: <input type="password" name="senha"/>
             <input type="submit" value="Login"/>
         </form>
         
@@ -108,7 +108,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .form-container input[type="text"] {
+        .form-container input[type="text"],
+        .form-container input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;

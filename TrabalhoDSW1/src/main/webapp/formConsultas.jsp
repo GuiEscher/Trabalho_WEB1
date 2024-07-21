@@ -3,6 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <title>Agendar Consulta</title>
+    
+    <script>
+        function validarFormulario() {
+            const cpf = document.getElementById("CPF_Paciente").value;
+            const crm = document.getElementById("CRM_Medico").value;
+            const horario = document.getElementById("Horario").value;
+            const dataConsulta = document.getElementById("DataConsulta").value;
+
+            const cpfRegex = /^\d{11}$/;
+            const crmRegex = /^\d{4,10}$/;
+            const horarioRegex = /^\d{2}:\d{2}$/;
+            const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+            if (!cpfRegex.test(cpf)) {
+                alert("CPF deve ter 11 dígitos numéricos.");
+                return false;
+            }
+            if (!crmRegex.test(crm)) {
+                alert("CRM deve ter entre 4 e 10 dígitos.");
+                return false;
+            }
+            if (!horarioRegex.test(horario)) {
+                alert("Horário deve estar no formato HH:MM.");
+                return false;
+            }
+            if (!dataRegex.test(dataConsulta)) {
+                alert("Data da Consulta deve estar no formato DD/MM/AAAA.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+	<header>
+        <div class="header-container">
+            <h1>Consultas.com</h1>
+            <a href="/home/homepage" class="button">Homepage</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Agendar Consulta Médica</h2>
+        <form action="agendarConsulta" method="post" onsubmit="return validarFormulario()">
+            <div class="form-group">
+                <label for="CPF_Paciente">CPF do Paciente:</label>
+                <input type="text" id="CPF_Paciente" name="CPF_Paciente" required>
+            </div>
+
+            <div class="form-group">
+                <label for="CRM_Medico">CRM do Médico:</label>
+                <input type="text" id="CRM_Medico" name="CRM_Medico" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Horario">Horário:</label>
+                <input type="text" id="Horario" name="Horario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="DataConsulta">Data da Consulta:</label>
+                <input type="text" id="DataConsulta" name="DataConsulta" required>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Agendar Consulta">
+            </div>
+        </form>
+
+        <%
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+        %>
+            <div class="error-message"><%= errorMessage %></div>
+        <%
+            }
+            if (request.getParameter("success") != null) {
+        %>
+            <div class="success-message">Consulta agendada com sucesso!</div>
+        <%
+            }
+        %>
+    </div>
+    
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -98,87 +183,6 @@
             text-align: center;
         }
     </style>
-    <script>
-        function validarFormulario() {
-            const cpf = document.getElementById("CPF_Paciente").value;
-            const crm = document.getElementById("CRM_Medico").value;
-            const horario = document.getElementById("Horario").value;
-            const dataConsulta = document.getElementById("DataConsulta").value;
-
-            const cpfRegex = /^\d{11}$/;
-            const crmRegex = /^\d{4,10}$/;
-            const horarioRegex = /^\d{2}:\d{2}$/;
-            const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-
-            if (!cpfRegex.test(cpf)) {
-                alert("CPF deve ter 11 dígitos numéricos.");
-                return false;
-            }
-            if (!crmRegex.test(crm)) {
-                alert("CRM deve ter entre 4 e 10 dígitos.");
-                return false;
-            }
-            if (!horarioRegex.test(horario)) {
-                alert("Horário deve estar no formato HH:MM.");
-                return false;
-            }
-            if (!dataRegex.test(dataConsulta)) {
-                alert("Data da Consulta deve estar no formato DD/MM/AAAA.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <h1>Agendamento de Consultas Médicas</h1>
-        </div>
-    </header>
-
-    <div class="container">
-        <h2>Agendar Consulta Médica</h2>
-        <form action="agendarConsulta" method="post" onsubmit="return validarFormulario()">
-            <div class="form-group">
-                <label for="CPF_Paciente">CPF do Paciente:</label>
-                <input type="text" id="CPF_Paciente" name="CPF_Paciente" required>
-            </div>
-
-            <div class="form-group">
-                <label for="CRM_Medico">CRM do Médico:</label>
-                <input type="text" id="CRM_Medico" name="CRM_Medico" required>
-            </div>
-
-            <div class="form-group">
-                <label for="Horario">Horário:</label>
-                <input type="text" id="Horario" name="Horario" required>
-            </div>
-
-            <div class="form-group">
-                <label for="DataConsulta">Data da Consulta:</label>
-                <input type="text" id="DataConsulta" name="DataConsulta" required>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Agendar Consulta">
-            </div>
-        </form>
-
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-            <div class="error-message"><%= errorMessage %></div>
-        <%
-            }
-            if (request.getParameter("success") != null) {
-        %>
-            <div class="success-message">Consulta agendada com sucesso!</div>
-        <%
-            }
-        %>
-    </div>
+    
 </body>
 </html>
