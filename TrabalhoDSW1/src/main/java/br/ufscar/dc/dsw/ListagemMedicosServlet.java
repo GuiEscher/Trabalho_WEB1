@@ -18,20 +18,25 @@ public class ListagemMedicosServlet extends HttpServlet {
     
     private static List<Medico> listaMedicos = new ArrayList<>();
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String especialidadeFiltro = request.getParameter("especialidade");
         if (especialidadeFiltro == null) {
             especialidadeFiltro = "";
+        } else {
+            especialidadeFiltro = especialidadeFiltro.toLowerCase(); // Converte para minúsculas
         }
         
         try (Connection con = PostgreeDBConfig.getConnection()) {
-            String sql = "SELECT Nome, CRM, Email, Senha, Especialidade FROM MEDICO WHERE Especialidade LIKE ?";
+            // Consulta SQL usando LOWER para garantir comparação case-insensitive nas especialidades
+            String sql = "SELECT Nome, CRM, Email, Senha, Especialidade FROM MEDICO WHERE LOWER(Especialidade) LIKE LOWER(?)";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
                 stmt.setString(1, "%" + especialidadeFiltro + "%"); 
                 ResultSet rs = stmt.executeQuery();
                 listaMedicos.clear();
 
                 while (rs.next()) {
+                	// Cria um objeto medico para armazenar os dados e colocar na lista que será enviada para o frontend
                     Medico aux = new Medico();
                     aux.setNome(rs.getString("Nome"));
                     aux.setCRM(rs.getString("CRM"));
