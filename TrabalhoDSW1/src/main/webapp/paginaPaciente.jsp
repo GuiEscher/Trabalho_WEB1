@@ -14,7 +14,21 @@
 	<%if (CPF == null) { %>
 		<c:redirect url="/paginaLogin.jsp?errorCode=1"/>
 	<%} else { %>
-		CPF: <%=CPF %>
+	    <h2>Listagem de Consultas</h2>
+	    <table>
+	        <tr>
+	            <th>Nome</th>
+	            <th>CRM</th>
+	            <th>Especialidade</th>
+	        </tr>
+	        <c:forEach var="consulta" items="${Consultas}">
+	            <tr>
+	                <td>${medico.nome}</td>
+	                <td>${medico.CRM}</td>
+	                <td>${medico.especialidade}</td>
+	            </tr>
+	        </c:forEach>
+	    </table>
 	<%} %>
 </body>
 </html>
