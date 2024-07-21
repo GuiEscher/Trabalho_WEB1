@@ -5,42 +5,40 @@ package br.ufscar.dc.dsw;
 
 public class ConsultaMedico {
     private String CRM_Medico;
-    private String NomePaciente;
+    private String Nome_Paciente;
     private String CPF_Paciente;
     private String DataConsulta;
     private String Horario;
+    
+	public String getCRM_Medico() {
+		return CRM_Medico;
+	}
+	public void setCRM_Medico(String cRM_Medico) {
+		CRM_Medico = cRM_Medico;
+	}
+	public String getNome_Paciente() {
+		return Nome_Paciente;
+	}
+	public void setNome_Paciente(String nome_Paciente) {
+		Nome_Paciente = nome_Paciente;
+	}
+	public String getCPF_Paciente() {
+		return CPF_Paciente;
+	}
+	public void setCPF_Paciente(String cPF_Paciente) {
+		CPF_Paciente = cPF_Paciente;
+	}
+	public String getDataConsulta() {
+		return DataConsulta;
+	}
+	public void setDataConsulta(String dataConsulta) {
+		DataConsulta = dataConsulta;
+	}
+	public String getHorario() {
+		return Horario;
+	}
+	public void setHorario(String horario) {
+		Horario = horario;
+	}
 
-    public String getCRM_Medico() {
-        return CRM_Medico;
-    }
-    public void setCRM_Medico(String cRM_Medico) {
-        CRM_Medico = cRM_Medico;
-    }
-
-    public String getCPF_Paciente() {
-        return CPF_Paciente;
-    }
-    public void setCPF_Paciente(String cPF_Paciente) {
-        CPF_Paciente = cPF_Paciente;
-    }
-
-    public String getData() {
-        return DataConsulta;
-    }
-    public void setData(String data) {
-        DataConsulta = data;
-    }
-
-    public String getHorario() {
-        return Horario;
-    }
-    public void setHorario(String horario) {
-        Horario = horario;
-    }
-    public String getNomePaciente() {
-        return NomePaciente;
-    }
-    public void setNomePaciente(String nomePaciente) {
-        NomePaciente = nomePaciente;
-    }
 }

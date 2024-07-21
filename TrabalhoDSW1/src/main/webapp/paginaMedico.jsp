@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<% String CRM = (String) request.getAttribute("CRM"); %>
+<% String CRM = (String) session.getAttribute("CRM"); %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
@@ -12,43 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="http://localhost:8080/home/minhasConsultasMedico">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
-</head>
-    
-    
-<body>
-    <% if (CRM == null) { %>
-        <c:redirect url="/home/login?errorCode=1"/>
-    <% } else { %>
-        
-    <% } %>
-    
-    <header>
-        <div class="header-container">
-            <h1>Consultas.com  - Meu Id: <%= CRM %></h1>
-            <a href="/home/homepage" class="button">Logout</a>
-        </div>
-    </header>
-    
-    <h2>Minhas consultas</h2>
-
-    <table>
-        <tr>
-            <th>Nome do Paciente</th>
-            <th>CPF do Paciente</th>
-            <th>Data</th>
-            <th>Horário</th>
-        </tr>
-        <c:forEach var="consulta" items="${Consultas}">
-            <tr>
-                <td>${consulta.nomepaciente}</td>
-                <td>${consulta.cpf_paciente}</td>
-                <td>${consulta.dataconsulta}</td>
-                <td>${consulta.horario}</td>
-            </tr>
-        </c:forEach>
-    </table>
-    
-    <style>
+	<style>
         body {
             font-family: 'Ubuntu', sans-serif;
             margin: 0;
@@ -147,6 +111,39 @@
             border-bottom: 2px solid black;
         }
     </style>
+</head>
     
+    
+<body>
+    <% if (CRM == null) { %>
+        <c:redirect url="/home/paginaLogin.jsp?errorCode=1"/>
+    <% } else { %>
+        <header>
+        <div class="header-container">
+            <h1>Bem-vindo, Medico</h1>
+            <a href="/home/logout" class="button">Logout</a>
+        </div>
+    </header>
+    
+    <h2>Listagem de consultas</h2>
+
+    <table>
+        <tr>
+            <th>Nome do Paciente</th>
+            <th>CPF do Paciente</th>
+            <th>Data</th>
+            <th>Horário</th>
+        </tr>
+        <c:forEach var="consulta" items="${Consultas}">
+            <tr>
+                <td>${consulta.nome_Paciente}</td>
+                <td>${consulta.CPF_Paciente}</td>
+                <td>${consulta.dataConsulta}</td>
+                <td>${consulta.horario}</td>
+            </tr>
+        </c:forEach>
+    </table>
+    <% } %>
+  
 </body>
 </html>

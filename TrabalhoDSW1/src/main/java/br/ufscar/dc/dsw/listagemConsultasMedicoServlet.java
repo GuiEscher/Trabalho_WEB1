@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = "/minhasConsultasMedico")
 public class listagemConsultasMedicoServlet extends HttpServlet {
@@ -22,44 +23,48 @@ public class listagemConsultasMedicoServlet extends HttpServlet {
     private static List<ConsultaMedico> consultas = new ArrayList<>();
        
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (Connection con = PostgreeDBConfig.getConnection()) {
+        HttpSession session = request.getSession();
+    	String inputCRM  = (String) session.getAttribute("CRM");
+    	
+    	try (Connection con = PostgreeDBConfig.getConnection()) {
             // Primeira consulta: Obtém as consultas e CPFs dos pacientes
-            String sql = "SELECT CRM_Medico, CPF_Paciente, Horario, DataConsulta FROM CONSULTA WHERE CRM_Medico = ?";
+            String sql = "SELECT CRM_Medico, CPF_Paciente, Horario, DataConsulta FROM CONSULTA WHERE CRM_Medico LIKE '" + inputCRM + "'";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
-                stmt.setString(1, request.getParameter("CRM_Medico")); // Assumindo que o CRM do médico é passado como parâmetro
+            	System.out.println("Procurando consultas do medico...");
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     consultas.clear();
-                    List<String> cpfs = new ArrayList<>();
+                    
                     
                     while (rs.next()) {
+                    	System.out.println("Encontrou consulta...");
+                    	System.out.println("Encontrou: " + rs.getString("CRM_Medico") + rs.getString("CPF_Paciente")+rs.getString("Horario")+rs.getString("DataConsulta"));
                         // Cria um objeto ConsultaMedico para armazenar os dados
                         ConsultaMedico aux = new ConsultaMedico();
                         aux.setCRM_Medico(rs.getString("CRM_Medico"));
                         aux.setCPF_Paciente(rs.getString("CPF_Paciente"));
                         aux.setHorario(rs.getString("Horario"));
-                        aux.setData(rs.getString("DataConsulta"));
+                        aux.setDataConsulta(rs.getString("DataConsulta"));
+                               
                         
-                        cpfs.add(rs.getString("CPF_Paciente"));
+                     // Segunda consulta: Obtém os nomes dos pacientes
+                        String sql2 = "SELECT  Nome FROM Paciente WHERE CPF LIKE '" + rs.getString("CPF_Paciente") + "'";
+                        
+                        try (PreparedStatement stmt2 = con.prepareStatement(sql2)) {
+                        		System.out.println("	Procurando nome do paciente...");
+                                ResultSet rs_aux = stmt2.executeQuery();
+                                
+                                while (rs_aux.next()) {
+                                	System.out.println("	Encontrou nome do paciente...");
+                                	System.out.println("Encontrou" + rs_aux.getString("Nome"));
+                                	aux.setNome_Paciente(rs_aux.getString("Nome"));
+                                }
+                        }
                         consultas.add(aux);
                     }
 
-                    // Segunda consulta: Obtém os nomes dos pacientes
-                    String sql2 = "SELECT CPF_Paciente, Nome FROM Paciente WHERE CPF_Paciente = ?";
                     
-                    try (PreparedStatement stmt2 = con.prepareStatement(sql2)) {
-                        for (ConsultaMedico consulta : consultas) {
-                            String cpf = consulta.getCPF_Paciente();
-                            stmt2.setString(1, cpf);
-                            
-                            try (ResultSet rs2 = stmt2.executeQuery()) {
-                                if (rs2.next()) {
-                                    String nomePaciente = rs2.getString("Nome");
-                                    consulta.setNomePaciente(nomePaciente); // Supondo que você tenha um método setNomePaciente na classe ConsultaMedico
-                                }
-                            }
-                        }
-                    }
+                    
                 }
                 
                 // Define os atributos da requisição e encaminha para o JSP
