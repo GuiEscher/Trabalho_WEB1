@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
@@ -19,6 +20,8 @@ public class LoginServlet extends HttpServlet {
 
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		
 		System.out.println("Iniciando login...");
 		String emailInput = request.getParameter("email");
 		String senhaInput = request.getParameter("senha");
@@ -71,9 +74,11 @@ public class LoginServlet extends HttpServlet {
 		
 		
         if (foundPaciente == true) {
-          request.setAttribute("CPF", id);
-          rd = request.getRequestDispatcher("paginaPaciente.jsp");
-          rd.forward(request, response);	
+         //request.setAttribute("CPF", id);
+      	  session.setAttribute("CPF", id);
+          //rd = request.getRequestDispatcher("paginaPaciente.jsp");
+          //rd.forward(request, response);	
+      	  response.sendRedirect("paginaPaciente.jsp?");
         } else if (foundMedico == true) {
             request.setAttribute("CRM", id);
             rd = request.getRequestDispatcher("paginaMedico.jsp");
