@@ -78,14 +78,13 @@ public class LoginServlet extends HttpServlet {
       	  session.setAttribute("CPF", id);
           //rd = request.getRequestDispatcher("paginaPaciente.jsp");
           //rd.forward(request, response);	
-      	  response.sendRedirect("paginaPaciente.jsp?");
+      	  response.sendRedirect("/home/listaConsultasPaciente");
         } else if (foundMedico == true) {
-            request.setAttribute("CRM", id);
-            rd = request.getRequestDispatcher("paginaMedico.jsp");
-            rd.forward(request, response);
+            session.setAttribute("CRM", id);
+          response.sendRedirect("/home/minhasConsultasMedico");
         } else {
         	// nao encontrou login
-        	System.out.println("Login não encontrado.");
+        	System.out.println("Login nÃ£o encontrado.");
             response.sendRedirect("paginaLogin.jsp?errorCode=1");
             return;
         }
