@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = "/listaConsultasPaciente")
 public class ListagemConsultasPacienteServlet extends HttpServlet {
@@ -20,8 +21,8 @@ public class ListagemConsultasPacienteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-    	String inputCPF = request.getParameter("CPF");
+    	HttpSession session = request.getSession();
+    	String inputCPF = (String) session.getAttribute("CPF");
     	
         try (Connection con = PostgreeDBConfig.getConnection()) {
             String sql = "SELECT CPF_Paciente, CRM_Medico, DataConsulta, Horario "

@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<% //String CPF = (String) request.getAttribute("CPF"); %>
 <%String CPF = (String) session.getAttribute("CPF");%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -95,28 +94,27 @@
         <header>
             <div class="header-container">
                 <h1>Bem-vindo, Paciente</h1>
-                <a href="logout.jsp" class="button">Sair</a>
+                <a href="/home/logout" class="button">Logout</a>
                 <a href="formConsultas.jsp" class="button">Cadastrar Consulta</a>
             </div>
         </header>
 
-        <div class="container">
-            <h2>Listagem de Consultas</h2>
-            <table>
+        <h2>Listagem de Consultas</h2>
+        <table>
+            <tr>
+                <th>Medico</th>
+                <th>Data</th>
+                <th>Horario</th>
+            </tr>
+            <c:forEach var="consulta" items="${Consultas}">
                 <tr>
-                    <th>Nome</th>
-                    <th>CRM</th>
-                    <th>Especialidade</th>
+                    <td>${consulta.nome_Medico}</td>
+                    <td>${consulta.dataConsulta}</td>
+                    <td>${consulta.horario}</td>
                 </tr>
-                <c:forEach var="consulta" items="${Consultas}">
-                    <tr>
-                        <td>${consulta.nome}</td>
-                        <td>${consulta.CRM}</td>
-                        <td>${consulta.especialidade}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </div>
+            </c:forEach>
+        </table>
+
     <% } %>
 </body>
 </html>
