@@ -42,20 +42,23 @@ public class ListagemConsultasPacienteServlet extends HttpServlet {
                     
                     String sql_aux = "SELECT Nome FROM MEDICO WHERE CRM LIKE '" + rs.getString("CRM_Medico") + "'";
                     try (PreparedStatement stmt_aux = con.prepareStatement(sql_aux)){
-                    	System.out.println("	Encontrou medico...");
+						System.out.println("	Procurando nome do medico...");
                     	ResultSet rs_aux = stmt_aux.executeQuery();
+                    	while (rs_aux.next()){
+							System.out.println("		Encontrou nome do medico...");
+							// Chave unica
+							aux.setNome_Medico(rs_aux.getString("Nome"));
+						}
                     	
-                    	aux.setNome_Medico(rs_aux.getString("Nome"));
                     }
                     
                    // aux.setNome_Medico();
                     listaConsultas.add(aux);
                 }
 
-//                request.setAttribute("Consultas", listaConsultas);
-//                request.setAttribute("Medico", listaConsultas);
-//                RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
-//                rd.forward(request, response);
+                request.setAttribute("Consultas", listaConsultas);
+                RequestDispatcher rd = request.getRequestDispatcher("paginaPaciente.jsp");
+                rd.forward(request, response);
             }
         } catch (SQLException e) {
             e.printStackTrace();
