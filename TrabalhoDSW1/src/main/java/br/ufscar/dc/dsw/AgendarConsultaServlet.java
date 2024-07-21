@@ -98,14 +98,36 @@ public class AgendarConsultaServlet extends HttpServlet {
 
         // Tentar agendar a consulta no banco de dados
         try (Connection con = PostgreeDBConfig.getConnection()) {
-            String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stmt = con.prepareStatement(sql)) {
-                stmt.setString(1, cpfPaciente);
-                stmt.setString(2, crmMedico);
-                stmt.setString(3, horario);
-                stmt.setString(4, dataConsulta);
-                stmt.executeUpdate(); 
-            }
+        	String sqlConf = "SELECT COUNT(*) FROM CONSULTA "
+		        			+ "WHERE CPF_Paciente = ? "
+		        			+ "  AND Horario = ? "
+		        			+ "  AND DataConsulta = ? ";
+        	
+        	try (PreparedStatement stmt1 = con.prepareStatement(sqlConf)) {
+        		stmt1.setString(1, cpfPaciente);
+                stmt1.setString(2, horario);
+                stmt1.setString(3, dataConsulta);
+                
+                
+                ResultSet count = stmt1.executeQuery();
+                if (count.next() && count.getInt(1) > 0) {
+                	System.out.println("Você já tem uma consulta nesse horário!");
+                    request.setAttribute("errorMessage", "Você já tem uma consulta nesse horário!");
+                    request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+                    return;
+                }
+                else {
+                	String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
+                    try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                        stmt.setString(1, cpfPaciente);
+                        stmt.setString(2, crmMedico);
+                        stmt.setString(3, horario);
+                        stmt.setString(4, dataConsulta);
+                        stmt.executeUpdate(); 
+                    }
+                }
+        	}
+            
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Erro ao agendar consulta: Verifique se os dados inseridos existem!");

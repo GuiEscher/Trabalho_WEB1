@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 		
 		Boolean foundPaciente = false;
 		Boolean foundMedico = false;
-		//Boolean foundAdmin = false;
+		Boolean foundAdmin = false;
 		
 		String id = null;
 		RequestDispatcher rd;
@@ -38,8 +38,23 @@ public class LoginServlet extends HttpServlet {
 		try (Connection con = PostgreeDBConfig.getConnection()){
 			String sql_paciente = "SELECT Email, Senha, CPF FROM PACIENTE";
 			String sql_medico = "SELECT Email, Senha, CRM FROM MEDICO";
-			//String sql_admin = "SELECT Email, Senha FROM ADMIN";
+			String sql_admin = "SELECT Email, Senha FROM ADMIN";
 			
+		// Procurando em admin
+			try (PreparedStatement stmt_a = con.prepareStatement(sql_admin)) {
+				System.out.println("Procurando login em admin...");
+                ResultSet rs_a = stmt_a.executeQuery();
+
+                while (rs_a.next() && foundAdmin==false) {                	
+                	if (emailInput.equals(rs_a.getString("Email")) && senhaInput.equals(rs_a.getString("Senha"))) {
+                		foundAdmin = true;
+                		id = rs_a.getString("ADM_KEY");
+                		System.out.println("Encontrou login de admin.");
+                	}
+                }
+			}
+			               
+
 			// Procurando em pacientes
 			try (PreparedStatement stmt_p = con.prepareStatement(sql_paciente)) {
 				System.out.println("Procurando login em pacientes...");
@@ -72,19 +87,18 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Erro na busca");
         }
 		
-		
-        if (foundPaciente == true) {
-         //request.setAttribute("CPF", id);
+		if (foundAdmin == true) {
+	      	  session.setAttribute("ADM_KEY", id);
+	      	  response.sendRedirect("#");
+	    } else if (foundPaciente == true) {
       	  session.setAttribute("CPF", id);
-          //rd = request.getRequestDispatcher("paginaPaciente.jsp");
-          //rd.forward(request, response);	
       	  response.sendRedirect("/home/listaConsultasPaciente");
         } else if (foundMedico == true) {
             session.setAttribute("CRM", id);
           response.sendRedirect("/home/minhasConsultasMedico");
         } else {
         	// nao encontrou login
-        	System.out.println("Login nÃ£o encontrado.");
+        	System.out.println("Login não encontrado.");
             response.sendRedirect("paginaLogin.jsp?errorCode=1");
             return;
         }

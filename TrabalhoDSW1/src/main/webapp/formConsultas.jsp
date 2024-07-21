@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <title>Agendar Consulta</title>
     <style>
         body {
@@ -107,7 +108,7 @@
 
             const cpfRegex = /^\d{11}$/;
             const crmRegex = /^\d{4,10}$/;
-            const horarioRegex = /^\d{2}:\d{2}$/;
+            const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/; // HH:MM formato 24h
             const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
             if (!cpfRegex.test(cpf)) {
@@ -127,6 +128,12 @@
                 return false;
             }
 
+            const [hours, minutes] = horario.split(':').map(Number);
+            if (hours < 8 || hours > 18 || (minutes !== 0 && minutes !== 30)) {
+                alert("Horário deve ser entre 08:00 e 18:00, em intervalos de 30 minutos.");
+                return false;
+            }
+
             return true;
         }
     </script>
@@ -135,6 +142,7 @@
     <header>
         <div class="header-container">
             <h1>Agendamento de Consultas Médicas</h1>
+            <a href="/home/listaConsultasPaciente" class="button">Voltar</a>
         </div>
     </header>
 
@@ -174,7 +182,7 @@
             }
             // Colocar o CPF na sessão novamente (opcional)
             session.setAttribute("CPF", CPF);
-			System.out.println(CPF + "CPF da session");
+            System.out.println(CPF + "CPF da session");
             // Recuperar mensagens de erro e sucesso (se houver)
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {

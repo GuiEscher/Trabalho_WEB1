@@ -19,7 +19,8 @@ public class LogoutServlet extends HttpServlet {
 		System.out.println("Iniciando logout...");
 		if (session != null) {
 			session.invalidate();
-			response.sendRedirect("home.jsp");
+			System.out.println("	Invalidado!");
+			response.sendRedirect("homepage");
 			System.out.println("	Logout concluído!");
 		}
 	}
