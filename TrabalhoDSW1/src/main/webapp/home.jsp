@@ -44,6 +44,7 @@
         <div class="header-container">
             <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;">Consultas.com</a></h1>
             <a href="/home/paginaLogin.jsp" class="button">Login</a>
+            <a href="/home/logout" class="button">Logout</a>
         </div>
     </header>
     
