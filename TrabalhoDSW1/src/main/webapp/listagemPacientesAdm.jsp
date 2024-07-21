@@ -20,6 +20,7 @@
         <div class="header-container">
             <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;">Consultas.com - Bem vindo Administrador!</a></h1>
             <a href="/home/listagemMedicos" class="button">Médicos</a>
+            <a href="/home/cadastrarPaciente" class="button">Novo paciente</a>
             <a href="/home/logout" class="button">Logout</a>
         </div>
     </header>
@@ -44,7 +45,10 @@
                 <td>${paciente.email}</td>
                 <td>${paciente.sexo}</td>
                 <td>${paciente.telefone}</td>
-                <td><a href="#">Edita</a> <a href="#">Remove</a></td>
+                <td>
+	                <a href="/home/editaPaciente?CPF=${paciente.CPF}">Edita</a> 
+	                <a href="/home/removePaciente?CPF=${paciente.CPF}">Remove</a>
+                </td>
             </tr>
         </c:forEach>
     </table>

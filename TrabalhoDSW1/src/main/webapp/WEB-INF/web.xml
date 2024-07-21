@@ -89,4 +89,34 @@
     <servlet-name>ListagemMedicosAdmin</servlet-name>
     <url-pattern>/ListagemMedicosAdmin</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RemovePacienteServlet</display-name>
+    <servlet-name>RemovePacienteServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.RemovePacienteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RemovePacienteServlet</servlet-name>
+    <url-pattern>/RemovePacienteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RemoveMedicoServlet</display-name>
+    <servlet-name>RemoveMedicoServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.RemoveMedicoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RemoveMedicoServlet</servlet-name>
+    <url-pattern>/RemoveMedicoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditaPacienteServlet</display-name>
+    <servlet-name>EditaPacienteServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.EditaPacienteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditaPacienteServlet</servlet-name>
+    <url-pattern>/EditaPacienteServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

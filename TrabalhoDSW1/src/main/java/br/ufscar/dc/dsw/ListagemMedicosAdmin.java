@@ -39,7 +39,7 @@ private static final long serialVersionUID = 1L;
                 }
 
                 request.setAttribute("Medicos", listaMedicos);
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/listagemMedicosAdm.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("/listagemMedicosAdm.jsp");
                 rd.forward(request, response);
             }
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package br.ufscar.dc.dsw;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,11 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/cadastrarPaciente")
 public class CadastrarPacienteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("formNovoPaciente.jsp");
+        dispatcher.forward(request, response);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String Nome = request.getParameter("Nome");

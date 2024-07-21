@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:url value="/cadastrarMedico" var="cadastro"/>
+<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");%>
 
 <!DOCTYPE html>
 <html>
@@ -87,10 +88,15 @@
 </head>
 
 <body>
+
+   <% if (ADM_KEY == null) { %>
+        <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
+   <% } else { %>
+	
     <header>
         <div class="header-container">
             <h1>Cadastro de Médico</h1>
-            <a href="#" class="button">Voltar</a>
+            <a href="/home/listagemMedicos" class="button">Voltar</a>
         </div>
     </header>
 
@@ -107,6 +113,9 @@
         <br/>
         <input type="submit" value="Cadastrar">
     </form>
+    
+    <% } %>
+    
 </body>
 
 </html>
