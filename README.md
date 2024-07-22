@@ -1,5 +1,10 @@
 Site desenvolvido para a disciplina de DSW1 da UFSCar
 
+Participantes:
+ - Guilherme Salvador Escher - id: GuiEscher
+ - Leo Rodrigues Aoki - id: leo32453
+ - Lucas Silva Mendes - id: Lcasmendes
+
 Para executar crie o banco do postgree de acordo com as instruções abaixo e acesse a pagina
 http://localhost:8080/home/homepage
 Ele deve mostrar todos medicos cadastrados
