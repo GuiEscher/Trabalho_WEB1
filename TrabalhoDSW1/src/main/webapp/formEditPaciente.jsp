@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:url value="/editaPaciente" var="Salvar"/>
-<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); %>
+<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
+String errorMessage = (String) request.getAttribute("errorMessage"); 
+%>
 
 <!DOCTYPE html>
 <html>
@@ -170,6 +172,12 @@
         <br/>
         <input type="submit" value="Salvar">
     </form>
+    
+    <div>
+        <% if (errorMessage != null) { %>
+            <div class="error"><%= errorMessage %></div>
+        <% } %>
+    </div>
     
   <% } %>
 </body>

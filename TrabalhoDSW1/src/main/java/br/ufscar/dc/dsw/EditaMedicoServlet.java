@@ -58,6 +58,8 @@ public class EditaMedicoServlet extends HttpServlet {
 	    String email = request.getParameter("Email");
 	    String senha = request.getParameter("Senha");
 	    String especialidade = request.getParameter("Especialidade");
+	    
+	    String errorMessage = null;
 
 	    try (Connection con = PostgreeDBConfig.getConnection()) {
 	        String sql = "UPDATE MEDICO SET Nome = ?, Email = ?, Senha = ?, Especialidade = ? WHERE CRM = ?";
@@ -72,16 +74,23 @@ public class EditaMedicoServlet extends HttpServlet {
 	            if (rowsUpdated > 0) {
 	                System.out.println("Medico atualizado com sucesso");
 	                response.sendRedirect("/home/listagemMedicos"); 
+	                return;
 	            } else {
+	            	
 	                System.out.println("Erro ao atualizar medico");
 	            
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	        errorMessage = "Erro ao atualizar medico: " + e.getMessage();
 	        System.out.println("Erro ao atualizar medico");
 	     
 	    }
+	    
+	    request.setAttribute("errorMessage", errorMessage);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("formEditMedico.jsp");
+        dispatcher.forward(request, response);
 	}
 
 }

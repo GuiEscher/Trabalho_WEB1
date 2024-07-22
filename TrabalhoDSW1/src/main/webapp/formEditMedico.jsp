@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:url value="/editaMedico" var="cadastro"/>
-<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); %>
+<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
+String errorMessage = (String) request.getAttribute("errorMessage"); 
+%>
 
 <!DOCTYPE html>
 <html>
@@ -143,6 +145,12 @@
         <br/>
         <input type="submit" value="Salvar">
     </form>
+    
+    <div>
+        <% if (errorMessage != null) { %>
+            <div class="error"><%= errorMessage %></div>
+        <% } %>
+    </div>
 
 <% } %>
 

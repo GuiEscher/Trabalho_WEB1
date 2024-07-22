@@ -65,6 +65,8 @@ public class EditaPacienteServlet extends HttpServlet {
 	    String telefone = request.getParameter("Telefone");
 	    String sexo = request.getParameter("Sexo");
 	    String datanascimento = request.getParameter("DataNascimento");
+	    
+	    String errorMessage = null;
 
 	    // Verifica se o CPF é nulo ou vazio
 	    if (cpf == null || cpf.isEmpty()) {
@@ -87,14 +89,20 @@ public class EditaPacienteServlet extends HttpServlet {
 	            if (rowsUpdated > 0) {
 	                System.out.println("Paciente atualizado com sucesso");
 	                response.sendRedirect("/home/listagemPacientes"); 
+	                return;
 	            } else {
 	                System.out.println("Erro ao atualizar paciente: Nenhum paciente encontrado com o CPF fornecido");
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	        errorMessage = "Erro ao cadastrar médico: " + e.getMessage();
 	        System.out.println("Erro ao atualizar paciente");
 	    }
+	    
+	    request.setAttribute("errorMessage", errorMessage);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("formEditPaciente.jsp");
+        dispatcher.forward(request, response);
 	}
 
 
