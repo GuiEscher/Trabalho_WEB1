@@ -1,3 +1,10 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%  String CPF = (String) session.getAttribute("CPF"); 
+//Recuperar mensagens de erro e sucesso (se houver)
+String errorMessage = (String) session.getAttribute("errorMessage");
+%>
+<c:url value="/agendarConsulta" var="home"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,7 +73,8 @@
             font-weight: bold;
         }
 
-        .form-group input[type="text"] {
+        .form-group input[type="text"],
+        .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -148,15 +156,19 @@
 
     <div class="container">
         <h2>Agendar Consulta Médica</h2>
-        <form action="agendarConsulta" method="post" onsubmit="return validarFormulario()">
+        <form name="consultaForm" action="${home}" method="post" onsubmit="return validarFormulario()">
             <div class="form-group">
                 <label for="CPF_Paciente">CPF do Paciente:</label>
-                <input type="text" id="CPF_Paciente" name="CPF_Paciente" required>
+                <input type="text" id="CPF_Paciente" name="CPF_Paciente" value="${CPF}" readonly required>
             </div>
 
             <div class="form-group">
-                <label for="CRM_Medico">CRM do Médico:</label>
-                <input type="text" id="CRM_Medico" name="CRM_Medico" required>
+                <label for="CRM_Medico">Médico:</label>
+                <select id="CRM_Medico" name="CRM_Medico" required>
+                    <c:forEach var="medico" items="${Medicos}">
+                        <option value="${medico.CRM}">${medico.nome}</option>
+                    </c:forEach>
+                </select>
             </div>
 
             <div class="form-group">
@@ -175,27 +187,14 @@
         </form>
 
         <%
-            // Recuperar o atributo CPF da sessão
-            String CPF = (String) session.getAttribute("CPF");
-            if (CPF == null) {
-                CPF = ""; // Definir um valor padrão se CPF for nulo
-            }
-            // Colocar o CPF na sessão novamente (opcional)
-            session.setAttribute("CPF", CPF);
-            System.out.println(CPF + "CPF da session");
-            // Recuperar mensagens de erro e sucesso (se houver)
-            String errorMessage = (String) request.getAttribute("errorMessage");
+            
             if (errorMessage != null) {
         %>
             <div class="error-message"><%= errorMessage %></div>
         <%
             }
-            if (request.getParameter("success") != null) {
-        %>
-            <div class="success-message">Consulta agendada com sucesso!</div>
-        <%
-            }
-        %>
+         %>
+           
     </div>
 </body>
 </html>
