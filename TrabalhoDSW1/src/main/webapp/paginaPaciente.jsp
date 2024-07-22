@@ -1,12 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%String CPF = (String) session.getAttribute("CPF");%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Pagina do Paciente</title>
+    <title><fmt:message key="pagina.paciente.titulo" /></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -93,18 +106,25 @@
     <% } else { %>
         <header>
             <div class="header-container">
-                <h1>Bem-vindo, Paciente</h1>
+                <h1><fmt:message key="pagina.paciente.header"/></h1>
                 <a href="/home/logout" class="button">Logout</a>
-                <a href="formConsultas.jsp" class="button">Cadastrar Consulta</a>
+                <a href="formConsultas.jsp" class="button"><fmt:message key="pagina.paciente.novaConsulta"/></a>
             </div>
         </header>
 
-        <h2>Listagem de Consultas</h2>
+        <form action="/home/mudaLinguagem" style="text-align:left">
+	        <select id="lang" name="lang" onchange="submit()">
+	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+	            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+	        </select>
+	    </form>
+	    
+        <h2><fmt:message key="pagina.paciente.lista"/></h2>
         <table>
             <tr>
-                <th>Medico</th>
-                <th>Data</th>
-                <th>Horario</th>
+                <th><fmt:message key="table.label.nomeMedico"/></th>
+                <th><fmt:message key="table.label.data"/></th>
+                <th><fmt:message key="table.label.horario"/></th>
             </tr>
             <c:forEach var="consulta" items="${Consultas}">
                 <tr>

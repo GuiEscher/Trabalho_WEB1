@@ -3,12 +3,26 @@
 
 <% String CRM = (String) session.getAttribute("CRM"); %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Minhas Consultas - Médico</title>
+    <title><fmt:message key="pagina.medico.titulo" /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="http://localhost:8080/home/minhasConsultasMedico">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
@@ -118,21 +132,28 @@
     <% if (CRM == null) { %>
         <c:redirect url="/home/paginaLogin.jsp?errorCode=1"/>
     <% } else { %>
-        <header>
+    <header>
         <div class="header-container">
-            <h1>Bem-vindo, Medico</h1>
+            <h1><fmt:message key="pagina.medico.header" /></h1>
             <a href="/home/logout" class="button">Logout</a>
         </div>
     </header>
     
-    <h2>Listagem de consultas</h2>
+	    <form action="/home/mudaLinguagem" style="text-align:left">
+	        <select id="lang" name="lang" onchange="submit()">
+	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+	            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+	        </select>
+	    </form>    
+	    
+    <h2><fmt:message key="pagina.medico.lista" /></h2>
 
     <table>
         <tr>
-            <th>Nome do Paciente</th>
-            <th>CPF do Paciente</th>
-            <th>Data</th>
-            <th>Horário</th>
+            <th><fmt:message key="table.label.nomePaciente" /></th>
+            <th><fmt:message key="table.label.CPFPaciente" /></th>
+            <th><fmt:message key="table.label.data" /></th>
+            <th><fmt:message key="table.label.horario" /></th>
         </tr>
         <c:forEach var="consulta" items="${Consultas}">
             <tr>
