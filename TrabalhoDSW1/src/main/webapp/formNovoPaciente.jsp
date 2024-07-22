@@ -1,4 +1,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
 <c:url value="/cadastrarPaciente" var="home"/>
 <%String ADM_KEY = (String) session.getAttribute("ADM_KEY");
   String errorMessage = (String) request.getAttribute("errorMessage"); 
@@ -9,7 +23,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Cadastro de Paciente</title>
+    <title><fmt:message key="adm.novop.titulo"/></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -140,27 +154,38 @@
    <% } else { %>
     <header>
         <div class="header-container">
-            <h1>Cadastro de Pacientes</h1>
-            <a href="/home/listagemPacientes" class="button">Voltar</a>
+            <h1><fmt:message key="adm.novop.header"/></h1>
+            <a href="/home/listagemPacientes" class="button"><fmt:message key="button.label.voltar"/></a>
         </div>
     </header>
-
+    
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+    
     <form name="cadastroPaciente" action="${home}" method="post" onsubmit="return validateForm()">
-        Nome: <input type="text" name="Nome" maxlength="50">
+        <fmt:message key="form.label.nome"/>: <input type="text" name="Nome" maxlength="50">
         <br/>
-        CPF: <input type="text" name="CPF" maxlength="11">
+        <fmt:message key="form.label.CPF"/>: <input type="text" name="CPF" maxlength="11">
         <br/>
-        Telefone: <input type="text" name="Telefone" maxlength="15">
+        <fmt:message key="form.label.telefone"/>: <input type="text" name="Telefone" maxlength="15">
         <br/>
-        Email: <input type="text" name="Email" maxlength="60">
+        <fmt:message key="form.label.email"/>: <input type="text" name="Email" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha" maxlength="20">
+        <fmt:message key="form.label.senha"/>: <input type="password" name="Senha" maxlength="20">
         <br/>
-        Sexo (M ou F): <input type="text" name="Sexo" maxlength="1">
+        <fmt:message key="form.label.sexo"/>: <input type="text" name="Sexo" maxlength="1">
         <br/>
-        Data de Nascimento: <input type="text" name="DataNascimento" maxlength="10" placeholder="dd/mm/aaaa">
+          
+    	<!-- traducao para variavel -->
+    	<fmt:message key="form.label.dformat" var="dformat"/>
+    	<fmt:message key="form.label.submit" var="submit"/>
+        <fmt:message key="form.label.datanascimento"/>: <input type="text" name="DataNascimento" maxlength="10" placeholder="${dformat}">
         <br/>
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="${submit}">
     </form>
     
     <div>

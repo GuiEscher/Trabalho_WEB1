@@ -1,15 +1,28 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:url value="/cadastrarMedico" var="cadastro"/>
 <%String ADM_KEY = (String) session.getAttribute("ADM_KEY");
   String errorMessage = (String) request.getAttribute("errorMessage"); 
 %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
 
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Cadastro de Médico</title>
+    <title><fmt:message key="adm.novom.titulo"/></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -118,23 +131,31 @@
 	
     <header>
         <div class="header-container">
-            <h1>Cadastro de Médico</h1>
-            <a href="/home/listagemMedicos" class="button">Voltar</a>
+            <h1><fmt:message key="adm.novom.header"/></h1>
+            <a href="/home/listagemMedicos" class="button"><fmt:message key="button.label.voltar"/></a>
         </div>
     </header>
 
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+    
     <form name="cadastroMedico" action="${cadastro}" method="post" onsubmit="return validateForm()">
-        Nome: <input type="text" name="Nome" maxlength="50">
+        <fmt:message key="form.label.nome"/>: <input type="text" name="Nome" maxlength="50">
         <br/>
-        CRM: <input type="text" name="CRM" maxlength="10">
+        <fmt:message key="form.label.CRM"/>: <input type="text" name="CRM" maxlength="10">
         <br/>
-        Email: <input type="text" name="Email" maxlength="60">
+        <fmt:message key="form.label.email"/>: <input type="text" name="Email" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha" maxlength="20">
+        <fmt:message key="form.label.senha"/>: <input type="password" name="Senha" maxlength="20">
         <br/>
-        Especialidade: <input type="text" name="Especialidade" maxlength="20">
+        <fmt:message key="form.label.especialidade"/>: <input type="text" name="Especialidade" maxlength="20">
         <br/>
-        <input type="submit" value="Cadastrar">
+    	<fmt:message key="form.label.submit" var="submit"/>
+        <input type="submit" value="${submit}">
     </form>
     
     <div>

@@ -1,6 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <%String ADM_KEY = (String) session.getAttribute("ADM_KEY");%>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -8,7 +22,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="http://localhost:8080/home/homepage">
-    <title>Consultas.com - Home</title>
+    <title><fmt:message key="adm.medico.titulo"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -18,23 +32,29 @@
 
     <header>
         <div class="header-container">
-            <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;">Consultas.com - Bem vindo Administrador!</a></h1>
-            <a href="/home/listagemPacientes" class="button">Pacientes</a>
-            <a href="/home/cadastrarMedico" class="button">Novo medico</a>
+            <h1><a href="#" onclick="voltarParaBase(); return false;" style="color: #fff; text-decoration: none;"><fmt:message key="adm.medico.header"/></a></h1>
+            <a href="/home/listagemPacientes" class="button"><fmt:message key="adm.medico.paciente"/></a>
+            <a href="/home/cadastrarMedico" class="button"><fmt:message key="adm.medico.novo"/></a>
             <a href="/home/logout" class="button">Logout</a>
         </div>
     </header>
 
-    <h2>Listagem de Médicos</h2>
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+
+    <h2><fmt:message key="adm.medico.lista"/></h2>
 
     <table>
         <tr>
-            <th>Nome</th>
-            <th>CRM</th>
-            <th>Especialidade</th>
-            <th>Email</th>
-
-            <th>Configurações</th>
+            <th><fmt:message key="table.label.nomeMedico"/></th>
+            <th><fmt:message key="table.label.CRMMedico"/></th>
+            <th><fmt:message key="table.label.especialidade"/></th>
+            <th><fmt:message key="form.label.email"/></th>
+            <th><fmt:message key="table.label.config"/></th>
         </tr>
         <c:forEach var="medico" items="${Medicos}">
             <tr>
@@ -43,8 +63,8 @@
                 <td>${medico.especialidade}</td>
                 <td>${medico.email}</td>
                 <td>
-                	<a href="/home/editaMedico?CRM=${medico.CRM}">Edita </a>
-					<a href="/home/removeMedico?CRM=${medico.CRM}"> Remove</a></td>
+                	<a href="/home/editaMedico?CRM=${medico.CRM}"><fmt:message key="table.label.edita"/> </a>
+					<a href="/home/removeMedico?CRM=${medico.CRM}"><fmt:message key="table.label.remove"/></a></td>
             </tr>
         </c:forEach>
     </table>

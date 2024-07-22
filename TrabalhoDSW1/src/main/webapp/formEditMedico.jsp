@@ -1,5 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
 <c:url value="/editaMedico" var="cadastro"/>
 <% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
 String errorMessage = (String) request.getAttribute("errorMessage"); 
@@ -10,7 +24,7 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Edição de Médico</title>
+    <title><fmt:message key="adm.editm.titulo"/></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -127,23 +141,31 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 
     <header>
         <div class="header-container">
-            <h1>Edição de Médico</h1>
-            <a href="/home/listagemMedicos" class="button">Voltar</a>
+            <h1><fmt:message key="adm.editm.header"/></h1>
+            <a href="/home/listagemMedicos" class="button"><fmt:message key="button.label.voltar"/></a>
         </div>
     </header>
 
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+
     <form name="medicoForm" action="${cadastro}" method="post" onsubmit="return validateForm()">
-        CRM: <input type="text" name="CRM" value="${medico.CRM}" readonly>
+        <fmt:message key="form.label.CRM"/>: <input type="text" name="CRM" value="${medico.CRM}" readonly>
         <br/>
-        Nome: <input type="text" id="Nome" name="Nome" value="${medico.nome}" maxlength="50">
+        <fmt:message key="form.label.nome"/>: <input type="text" id="Nome" name="Nome" value="${medico.nome}" maxlength="50">
         <br/>
-        Email: <input type="text" id="Email" name="Email" value="${medico.email}" maxlength="60">
+        <fmt:message key="form.label.email"/>: <input type="text" id="Email" name="Email" value="${medico.email}" maxlength="60">
         <br/>
-        Senha: <input type="password" id="Senha" name="Senha" value="${medico.senha}" maxlength="20">
+        <fmt:message key="form.label.senha"/>: <input type="password" id="Senha" name="Senha" value="${medico.senha}" maxlength="20">
         <br/>
-        Especialidade: <input type="text" id="Especialidade" name="Especialidade" value="${medico.especialidade}" maxlength="20">
+        <fmt:message key="form.label.especialidade"/>: <input type="text" id="Especialidade" name="Especialidade" value="${medico.especialidade}" maxlength="20">
         <br/>
-        <input type="submit" value="Salvar">
+        <fmt:message key="form.label.save" var="save"/>
+        <input type="submit" value="${save}">
     </form>
     
     <div>

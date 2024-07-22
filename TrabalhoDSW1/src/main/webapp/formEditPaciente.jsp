@@ -1,4 +1,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
 <c:url value="/editaPaciente" var="Salvar"/>
 <% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
 String errorMessage = (String) request.getAttribute("errorMessage"); 
@@ -9,7 +23,7 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Editar Paciente</title>
+    <title><fmt:message key="adm.editp.titulo"/></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -150,27 +164,35 @@ String errorMessage = (String) request.getAttribute("errorMessage");
    <% } else { %>
     <header>
         <div class="header-container">
-            <h1>Edição de paciente</h1>
-            <a href="/home/listagemPacientes" class="button">Voltar</a>
+            <h1><fmt:message key="adm.editp.header"/></h1>
+            <a href="/home/listagemPacientes" class="button"><fmt:message key="button.label.voltar"/></a>
         </div>
     </header>
 
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+
     <form name="pacienteForm" action="${Salvar}" method="post" onsubmit="return validateForm()">
-        CPF: <input type="text" name="CPF" value="${paciente.CPF}" readonly>
+        <fmt:message key="form.label.CPF"/>: <input type="text" name="CPF" value="${paciente.CPF}" readonly>
         <br/>
-        Nome: <input type="text" name="Nome" value="${paciente.nome}" maxlength="50">
+        <fmt:message key="form.label.nome"/>: <input type="text" name="Nome" value="${paciente.nome}" maxlength="50">
         <br/>
-        Telefone: <input type="text" name="Telefone" value="${paciente.telefone}" maxlength="15">
+        <fmt:message key="form.label.telefone"/>: <input type="text" name="Telefone" value="${paciente.telefone}" maxlength="15">
         <br/>
-        Email: <input type="text" name="Email" value="${paciente.email}" maxlength="60">
+        <fmt:message key="form.label.email"/>: <input type="text" name="Email" value="${paciente.email}" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha" value="${paciente.senha}" maxlength="20">
+        <fmt:message key="form.label.senha"/>: <input type="password" name="Senha" value="${paciente.senha}" maxlength="20">
         <br/>
-        Sexo: <input type="text" name="Sexo" value="${paciente.sexo}" maxlength="1">
+        <fmt:message key="form.label.sexo"/>: <input type="text" name="Sexo" value="${paciente.sexo}" maxlength="1">
         <br/>
-        Data Nascimento: <input type="text" name="DataNascimento" value="${paciente.data_nascimento}">
+        <fmt:message key="form.label.datanascimento"/>: <input type="text" name="DataNascimento" value="${paciente.data_nascimento}">
         <br/>
-        <input type="submit" value="Salvar">
+        <fmt:message key="form.label.save" var="save"/>
+        <input type="submit" value="${save}">
     </form>
     
     <div>
