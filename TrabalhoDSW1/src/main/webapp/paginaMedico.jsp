@@ -137,16 +137,15 @@
             <h1><fmt:message key="pagina.medico.header" /></h1>
             <a href="/home/logout" class="button">Logout</a>
         </div>
-        
+    </header>
+    
 	    <form action="/home/mudaLinguagem" style="text-align:left">
 	        <select id="lang" name="lang" onchange="submit()">
 	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
 	            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
 	        </select>
-	    </form>
-     
-    </header>
-    
+	    </form>    
+	    
     <h2><fmt:message key="pagina.medico.lista" /></h2>
 
     <table>

@@ -110,7 +110,8 @@
                 <a href="/home/logout" class="button">Logout</a>
                 <a href="formConsultas.jsp" class="button"><fmt:message key="pagina.paciente.novaConsulta"/></a>
             </div>
-        
+        </header>
+
         <form action="/home/mudaLinguagem" style="text-align:left">
 	        <select id="lang" name="lang" onchange="submit()">
 	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
@@ -118,8 +119,6 @@
 	        </select>
 	    </form>
 	    
-        </header>
-
         <h2><fmt:message key="pagina.paciente.lista"/></h2>
         <table>
             <tr>

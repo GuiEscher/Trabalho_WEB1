@@ -63,15 +63,15 @@
             <a href="/home/logout" class="button">Logout</a>
         </div>
         
-        <form action="/home/mudaLinguagem" style="text-align:left">
-	        <select id="lang" name="lang" onchange="submit()">
-	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
-	            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
-	        </select>
-	    </form>
+
 	    
     </header>
-    
+    <form action="/home/mudaLinguagem" style="text-align:left">
+       <select id="lang" name="lang" onchange="submit()">
+           <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+           <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+       </select>
+   </form>  
     <!-- traducao para variavel -->
     <fmt:message key="pagina.home.buscaesp" var="buscaesp"/>
     <fmt:message key="pagina.home.buscabtn" var="buscabtn"/>
