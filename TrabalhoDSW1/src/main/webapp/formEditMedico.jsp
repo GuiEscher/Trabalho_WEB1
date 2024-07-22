@@ -7,7 +7,7 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="ISO-8859-1">
     <title>Edição de Médico</title>
     <style>
         body {
@@ -85,7 +85,36 @@
         form input[type="submit"]:hover {
             background-color: #002244;
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .success {
+            color: green;
+            font-size: 0.9em;
+        }
+
+        .field-error {
+            border-color: red;
+        }
     </style>
+    <script>
+        function validateForm() {
+            var form = document.forms["medicoForm"];
+            var fields = ["Nome", "Email", "Senha", "Especialidade"];
+            
+            for (var i = 0; i < fields.length; i++) {
+                var field = form[fields[i]].value;
+                if (field === "") {
+                    alert("Por favor, preencha todos os campos.");
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
 </head>
 
 <body>
@@ -101,16 +130,16 @@
         </div>
     </header>
 
-    <form action="${cadastro}" method="post">
-    	CRM: <input type="text" name="CRM" value="${medico.CRM}" readonly>
+    <form name="medicoForm" action="${cadastro}" method="post" onsubmit="return validateForm()">
+        CRM: <input type="text" name="CRM" value="${medico.CRM}" readonly>
         <br/>
-        Nome: <input type="text" name="Nome" value="${medico.nome}">
+        Nome: <input type="text" id="Nome" name="Nome" value="${medico.nome}" maxlength="50">
         <br/>
-        Email: <input type="text" name="Email" value="${medico.email}">
+        Email: <input type="text" id="Email" name="Email" value="${medico.email}" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha" value="${medico.senha}">
+        Senha: <input type="password" id="Senha" name="Senha" value="${medico.senha}" maxlength="20">
         <br/>
-        Especialidade: <input type="text" name="Especialidade" value="${medico.especialidade}">
+        Especialidade: <input type="text" id="Especialidade" name="Especialidade" value="${medico.especialidade}" maxlength="20">
         <br/>
         <input type="submit" value="Salvar">
     </form>

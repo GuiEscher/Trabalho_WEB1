@@ -33,7 +33,7 @@ public class ListagemPacientesServlet extends HttpServlet {
                     aux.setEmail(rs.getString("Email"));
                     aux.setTelefone(rs.getString("Telefone"));
                     aux.setSexo(rs.getString("Sexo"));
-                    aux.setData_nascimento(rs.getString("Sexo"));
+                    aux.setData_nascimento(rs.getString("DataNascimento"));
                     listaPacientes.add(aux);
                 }
 

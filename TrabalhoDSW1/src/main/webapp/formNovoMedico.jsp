@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:url value="/cadastrarMedico" var="cadastro"/>
-<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");%>
+<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");
+  String errorMessage = (String) request.getAttribute("errorMessage"); 
+%>
 
 <!DOCTYPE html>
 <html>
@@ -84,7 +86,28 @@
         form input[type="submit"]:hover {
             background-color: #002244;
         }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
     </style>
+    <script>
+        function validateForm() {
+            var form = document.forms["cadastroMedico"];
+            var fields = ["Nome", "CRM", "Email", "Senha", "Especialidade"];
+            
+            for (var i = 0; i < fields.length; i++) {
+                var field = form[fields[i]].value;
+                if (field === "") {
+                    alert("Por favor, preencha todos os campos.");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    </script>
 </head>
 
 <body>
@@ -100,19 +123,25 @@
         </div>
     </header>
 
-    <form action="${ cadastro }" method="post">
-        Nome: <input type="text" name="Nome">
+    <form name="cadastroMedico" action="${cadastro}" method="post" onsubmit="return validateForm()">
+        Nome: <input type="text" name="Nome" maxlength="50">
         <br/>
-        CRM: <input type="text" name="CRM">
+        CRM: <input type="text" name="CRM" maxlength="10">
         <br/>
-        Email: <input type="text" name="Email">
+        Email: <input type="text" name="Email" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha">
+        Senha: <input type="password" name="Senha" maxlength="20">
         <br/>
-        Especialidade: <input type="text" name="Especialidade">
+        Especialidade: <input type="text" name="Especialidade" maxlength="20">
         <br/>
         <input type="submit" value="Cadastrar">
     </form>
+    
+    <div>
+        <% if (errorMessage != null) { %>
+            <div class="error"><%= errorMessage %></div>
+        <% } %>
+    </div>
     
     <% } %>
     

@@ -28,8 +28,10 @@ public class CadastrarPacienteServlet extends HttpServlet {
         String Senha = request.getParameter("Senha");
         String Sexo = request.getParameter("Sexo");
         String DataNascimento = request.getParameter("DataNascimento");
+        String errorMessage = null;
 
         try (Connection con = PostgreeDBConfig.getConnection()) {
+        	
             String sql = "INSERT INTO PACIENTE (Nome, CPF, Telefone, Email, Senha, Sexo, DataNascimento) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
                 stmt.setString(1, Nome);
@@ -39,14 +41,23 @@ public class CadastrarPacienteServlet extends HttpServlet {
                 stmt.setString(5, Senha);
                 stmt.setString(6, Sexo);
                 stmt.setString(7, DataNascimento);
-                stmt.executeUpdate(); // Execute the insert query
-                System.out.println("Paciente cadastrado");
+                int rowsAffected = stmt.executeUpdate(); 
+                if (rowsAffected > 0) {
+                	System.out.println("Paciente cadastrado");
+                    response.sendRedirect("/home/listagemPacientes");
+                    return;
+                } else {
+                	System.out.println("Paciente nao cadastrado");
+                }
+               
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Paciente nao cadastrado");
+            errorMessage = "Erro ao cadastrar médico: " + e.getMessage();
         }
 
-        response.sendRedirect("formNovoPaciente.jsp");
+        request.setAttribute("errorMessage", errorMessage);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("formNovoPaciente.jsp");
+        dispatcher.forward(request, response);
     }
 }
