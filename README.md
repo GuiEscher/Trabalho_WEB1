@@ -1,1 +1,1 @@
-Para acessar o projeto completo vá para a branch master
+Para acessar o projeto completo vá para a branch master.
