@@ -104,11 +104,11 @@
     <% if (CPF == null) { %>
         <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
     <% } else { %>
-        <header>
+		<header>
             <div class="header-container">
                 <h1><fmt:message key="pagina.paciente.header"/></h1>
                 <a href="/home/logout" class="button">Logout</a>
-                <a href="formConsultas.jsp" class="button"><fmt:message key="pagina.paciente.novaConsulta"/></a>
+                <a href="/home/agendarConsulta" class="button"><fmt:message key="pagina.paciente.novaConsulta"/></a>
             </div>
         </header>
 
