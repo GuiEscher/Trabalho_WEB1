@@ -13,7 +13,7 @@ public class EmailUtil {
     private static final String HOST = "smtp.sendgrid.net";
     private static final int PORT = 587;
     private static final String USER = "apikey"; // Usuário fixo do SendGrid
-    private static final String PASS = "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";  //API Key do SendGrid
+    private static final String PASS = "key";  //API Key do SendGrid
 
     public static void sendEmail(String to, String subject, String body) throws MessagingException {
         Properties props = new Properties();
