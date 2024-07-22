@@ -1,7 +1,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%  String CPF = (String) session.getAttribute("CPF"); 
-//Recuperar mensagens de erro e sucesso (se houver)
-String errorMessage = (String) session.getAttribute("errorMessage");
+<% 
+    // Recuperar mensagens de erro e sucesso (se houver)
+    String errorMessage = (String) session.getAttribute("errorMessage");
+    String successMessage = (String) session.getAttribute("successMessage");
+
+    // Se for a primeira vez na página, limpar mensagens
+    if (errorMessage == null && successMessage == null) {
+        session.removeAttribute("errorMessage");
+        session.removeAttribute("successMessage");
+    }
+
+    // Determinar qual mensagem exibir
+    String messageToShow = null;
+    if (successMessage != null) {
+        messageToShow = successMessage;
+        session.removeAttribute("successMessage");
+    } else if (errorMessage != null) {
+        messageToShow = errorMessage;
+        session.removeAttribute("errorMessage");
+    }
 %>
 <c:url value="/agendarConsulta" var="home"/>
 
@@ -186,15 +203,19 @@ String errorMessage = (String) session.getAttribute("errorMessage");
             </div>
         </form>
 
-        <%
-            
-            if (errorMessage != null) {
+        <% 
+            if (messageToShow != null) { 
+                if (successMessage != null) {
         %>
-            <div class="error-message"><%= errorMessage %></div>
-        <%
+            <div class="success-message"><%= messageToShow %></div>
+        <% 
+                } else {
+        %>
+            <div class="error-message"><%= messageToShow %></div>
+        <% 
+                }
             }
-         %>
-           
+        %>
     </div>
 </body>
 </html>

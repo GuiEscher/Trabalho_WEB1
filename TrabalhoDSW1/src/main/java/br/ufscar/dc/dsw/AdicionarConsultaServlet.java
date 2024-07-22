@@ -64,8 +64,8 @@ public class AdicionarConsultaServlet extends HttpServlet {
         String horario = request.getParameter("Horario");
         String dataConsulta = request.getParameter("DataConsulta");
         String cpfUsuario = (String) session.getAttribute("CPF");
-        System.out.println(cpfPaciente + " Cpf ");
-        System.out.println(cpfUsuario + " Cpf que veio");
+
+        // Validações
         if (cpfUsuario == null || !cpfPaciente.equals(cpfUsuario)) {
             session.setAttribute("errorMessage", "Insira o seu CPF!");
             response.sendRedirect("/home/agendarConsulta");
@@ -102,6 +102,7 @@ public class AdicionarConsultaServlet extends HttpServlet {
         }
 
         try (Connection con = PostgreeDBConfig.getConnection()) {
+            // Verifica se o horário está ocupado
             String sql = "SELECT COUNT(*) FROM CONSULTA WHERE CRM_Medico = ? AND Horario = ? AND DataConsulta = ?";
             try (PreparedStatement stmtVerifica = con.prepareStatement(sql)) {
                 stmtVerifica.setString(1, crmMedico);
@@ -118,12 +119,12 @@ public class AdicionarConsultaServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             session.setAttribute("errorMessage", "Erro ao verificar disponibilidade de horário.");
-   
             response.sendRedirect("/home/agendarConsulta");
             return;
         }
 
         try (Connection con = PostgreeDBConfig.getConnection()) {
+            // Verifica se o paciente já tem uma consulta
             String sqlConf = "SELECT COUNT(*) FROM CONSULTA WHERE CPF_Paciente = ? AND Horario = ? AND DataConsulta = ?";
             try (PreparedStatement stmt1 = con.prepareStatement(sqlConf)) {
                 stmt1.setString(1, cpfPaciente);
@@ -136,6 +137,7 @@ public class AdicionarConsultaServlet extends HttpServlet {
                     response.sendRedirect("/home/agendarConsulta");
                     return;
                 } else {
+                    // Insere a nova consulta
                     String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
                     try (PreparedStatement stmt = con.prepareStatement(sql)) {
                         stmt.setString(1, cpfPaciente);
@@ -159,8 +161,6 @@ public class AdicionarConsultaServlet extends HttpServlet {
                             EmailUtil.sendEmail(medicoEmail, subject, bodyMedico);
                             System.out.println("Email enviado ao Medico");
                         }
-                       
-                        
                     } catch (MessagingException e) {
                         session.setAttribute("errorMessage", "Erro ao enviar e-mail. Tente novamente mais tarde.");
                         response.sendRedirect("/home/agendarConsulta");
@@ -175,9 +175,11 @@ public class AdicionarConsultaServlet extends HttpServlet {
             return;
         }
         
-        session.setAttribute("errorMessage", null);
+        // Mensagem de sucesso
+        session.setAttribute("successMessage", "Consulta agendada com sucesso!");
         response.sendRedirect("/home/agendarConsulta");
     }
+
     
     private String getEmailByCPF(Connection con, String cpfPaciente) throws SQLException {
         String sql = "SELECT Email FROM PACIENTE WHERE CPF = ?";
