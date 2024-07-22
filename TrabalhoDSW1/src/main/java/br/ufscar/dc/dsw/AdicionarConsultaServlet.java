@@ -1,6 +1,7 @@
 package br.ufscar.dc.dsw;
 
 import javax.mail.MessagingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,47 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(urlPatterns = "/agendarConsulta")
-public class AgendarConsultaServlet extends HttpServlet {
+public class AdicionarConsultaServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+    
+        // Para listar os médicos na hora da consulta
+        List<Medico> listaMedicos = new ArrayList<>();
+        System.out.println("Buscando Medicos");
+
+        try (Connection con = PostgreeDBConfig.getConnection()) {
+            String sql = "SELECT CRM, Nome FROM MEDICO";
+            try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    // Busca o CRM para mandar pro post e nome para mostrar na listagem
+                    Medico aux = new Medico();
+                    aux.setCRM(rs.getString("CRM"));
+                    aux.setNome(rs.getString("Nome"));
+                    listaMedicos.add(aux);
+                }
+                
+             // Depuração
+                for (Medico medico : listaMedicos) {
+                    System.out.println("CRM: " + medico.getCRM() + ", Nome: " + medico.getNome());
+                }
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro na listagem de médicos");
+        }
+
+        request.setAttribute("Medicos", listaMedicos);
+        RequestDispatcher rd = request.getRequestDispatcher("/formConsultas.jsp");
+        rd.forward(request, response);
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -29,28 +67,28 @@ public class AgendarConsultaServlet extends HttpServlet {
         System.out.println(cpfPaciente + " Cpf ");
         System.out.println(cpfUsuario + " Cpf que veio");
         if (cpfUsuario == null || !cpfPaciente.equals(cpfUsuario)) {
-            request.setAttribute("errorMessage", "Insira o seu CPF!");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Insira o seu CPF!");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
         if (!cpfPaciente.matches("\\d{11}")) {
-            request.setAttribute("errorMessage", "CPF deve ter 11 dígitos numéricos.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "CPF deve ter 11 dígitos numéricos.");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
         if (!crmMedico.matches("\\d{4,10}")) {
-            request.setAttribute("errorMessage", "CRM deve ter entre 4 e 10 dígitos.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "CRM deve ter entre 4 e 10 dígitos.");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
         if (!horario.matches("\\d{2}:\\d{2}")) {
-            request.setAttribute("errorMessage", "Horário deve estar no formato HH:MM.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Horário deve estar no formato HH:MM.");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
         if (!dataConsulta.matches("\\d{2}/\\d{2}/\\d{4}")) {
-            request.setAttribute("errorMessage", "Data da Consulta deve estar no formato DD/MM/AAAA.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Data da Consulta deve estar no formato DD/MM/AAAA.");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
 
@@ -58,8 +96,8 @@ public class AgendarConsultaServlet extends HttpServlet {
         try {
             sdf.parse(dataConsulta);
         } catch (ParseException e) {
-            request.setAttribute("errorMessage", "Data da Consulta inválida.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Data da Consulta inválida.");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
 
@@ -72,15 +110,16 @@ public class AgendarConsultaServlet extends HttpServlet {
                 
                 try (ResultSet rs = stmtVerifica.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        request.setAttribute("errorMessage", "O horário inserido já está ocupado.");
-                        request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+                        session.setAttribute("errorMessage", "O horário inserido já está ocupado.");
+                        response.sendRedirect("/home/agendarConsulta");
                         return;
                     }
                 }
             }
         } catch (SQLException e) {
-            request.setAttribute("errorMessage", "Erro ao verificar disponibilidade de horário.");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Erro ao verificar disponibilidade de horário.");
+   
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
 
@@ -93,8 +132,8 @@ public class AgendarConsultaServlet extends HttpServlet {
                 
                 ResultSet count = stmt1.executeQuery();
                 if (count.next() && count.getInt(1) > 0) {
-                    request.setAttribute("errorMessage", "Você já tem uma consulta nesse horário!");
-                    request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+                    session.setAttribute("errorMessage", "Você já tem uma consulta nesse horário!");
+                    response.sendRedirect("/home/agendarConsulta");
                     return;
                 } else {
                     String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
@@ -120,21 +159,24 @@ public class AgendarConsultaServlet extends HttpServlet {
                             EmailUtil.sendEmail(medicoEmail, subject, bodyMedico);
                             System.out.println("Email enviado ao Medico");
                         }
+                       
+                        
                     } catch (MessagingException e) {
-                        request.setAttribute("errorMessage", "Erro ao enviar e-mail. Tente novamente mais tarde.");
-                        request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+                        session.setAttribute("errorMessage", "Erro ao enviar e-mail. Tente novamente mais tarde.");
+                        response.sendRedirect("/home/agendarConsulta");
                         System.out.println(e.getMessage());
                         return;
                     }
                 }
             }
         } catch (SQLException e) {
-            request.setAttribute("errorMessage", "Erro ao agendar consulta: Verifique se os dados inseridos existem!");
-            request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+            session.setAttribute("errorMessage", "Erro ao agendar consulta: Verifique se os dados inseridos existem!");
+            response.sendRedirect("/home/agendarConsulta");
             return;
         }
-
-        response.sendRedirect("formConsultas.jsp?success=true");
+        
+        session.setAttribute("errorMessage", null);
+        response.sendRedirect("/home/agendarConsulta");
     }
     
     private String getEmailByCPF(Connection con, String cpfPaciente) throws SQLException {
@@ -162,4 +204,9 @@ public class AgendarConsultaServlet extends HttpServlet {
         }
         return null;
     }
+    
+   
+    	
+    	
+    
 }
