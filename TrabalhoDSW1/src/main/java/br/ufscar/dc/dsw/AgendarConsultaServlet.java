@@ -1,5 +1,6 @@
 package br.ufscar.dc.dsw;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,18 +20,14 @@ public class AgendarConsultaServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // sessão atual do request
         HttpSession session = request.getSession();
-        // dados inseridos
         String cpfPaciente = request.getParameter("CPF_Paciente");
         String crmMedico = request.getParameter("CRM_Medico");
         String horario = request.getParameter("Horario");
         String dataConsulta = request.getParameter("DataConsulta");
         String cpfUsuario = (String) session.getAttribute("CPF");
-        System.out.println(cpfPaciente + "CPF DO FORM");
-        System.out.println(cpfUsuario + "CPF DO LOGIN" );
-        System.out.println(crmMedico + "CRM");
-        // Verificar se os dados são válidos
+        System.out.println(cpfPaciente + " Cpf ");
+        System.out.println(cpfUsuario + " Cpf que veio");
         if (cpfUsuario == null || !cpfPaciente.equals(cpfUsuario)) {
             request.setAttribute("errorMessage", "Insira o seu CPF!");
             request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
@@ -57,7 +54,6 @@ public class AgendarConsultaServlet extends HttpServlet {
             return;
         }
 
-        // Converter DataConsulta para o formato correto
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             sdf.parse(dataConsulta);
@@ -67,74 +63,103 @@ public class AgendarConsultaServlet extends HttpServlet {
             return;
         }
 
-        // Verifica se há disponibilidade de horário para depois tentar o agendamento
         try (Connection con = PostgreeDBConfig.getConnection()) {
-            System.out.println("Conectado com sucesso ao banco para verificar disponibilidade");
             String sql = "SELECT COUNT(*) FROM CONSULTA WHERE CRM_Medico = ? AND Horario = ? AND DataConsulta = ?";
             try (PreparedStatement stmtVerifica = con.prepareStatement(sql)) {
-                System.out.println("Preparando a consulta SQL: " + sql);
                 stmtVerifica.setString(1, crmMedico);
                 stmtVerifica.setString(2, horario);
                 stmtVerifica.setString(3, dataConsulta);
-                System.out.println("Parâmetros configurados: CRM_Medico=" + crmMedico + ", Horario=" + horario + ", DataConsulta=" + dataConsulta);
                 
                 try (ResultSet rs = stmtVerifica.executeQuery()) {
                     if (rs.next() && rs.getInt(1) > 0) {
-                        System.out.println("O horário inserido já está ocupado.");
                         request.setAttribute("errorMessage", "O horário inserido já está ocupado.");
                         request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
                         return;
-                    } else {
-                        System.out.println("Horário disponível.");
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao verificar disponibilidade de horário: " + e.getMessage());
-            request.setAttribute("errorMessage", "Erro ao verificar disponibilidade de horário");
+            request.setAttribute("errorMessage", "Erro ao verificar disponibilidade de horário.");
             request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
             return;
         }
 
-        // Tentar agendar a consulta no banco de dados
         try (Connection con = PostgreeDBConfig.getConnection()) {
-        	String sqlConf = "SELECT COUNT(*) FROM CONSULTA "
-		        			+ "WHERE CPF_Paciente = ? "
-		        			+ "  AND Horario = ? "
-		        			+ "  AND DataConsulta = ? ";
-        	
-        	try (PreparedStatement stmt1 = con.prepareStatement(sqlConf)) {
-        		stmt1.setString(1, cpfPaciente);
+            String sqlConf = "SELECT COUNT(*) FROM CONSULTA WHERE CPF_Paciente = ? AND Horario = ? AND DataConsulta = ?";
+            try (PreparedStatement stmt1 = con.prepareStatement(sqlConf)) {
+                stmt1.setString(1, cpfPaciente);
                 stmt1.setString(2, horario);
                 stmt1.setString(3, dataConsulta);
                 
-                
                 ResultSet count = stmt1.executeQuery();
                 if (count.next() && count.getInt(1) > 0) {
-                	System.out.println("Você já tem uma consulta nesse horário!");
                     request.setAttribute("errorMessage", "Você já tem uma consulta nesse horário!");
                     request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
                     return;
-                }
-                else {
-                	String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
+                } else {
+                    String sql = "INSERT INTO CONSULTA (CPF_Paciente, CRM_Medico, Horario, DataConsulta) VALUES (?, ?, ?, ?)";
                     try (PreparedStatement stmt = con.prepareStatement(sql)) {
                         stmt.setString(1, cpfPaciente);
                         stmt.setString(2, crmMedico);
                         stmt.setString(3, horario);
                         stmt.setString(4, dataConsulta);
                         stmt.executeUpdate(); 
+                        
+                        String pacienteEmail = getEmailByCPF(con, cpfPaciente);
+                        String medicoEmail = getEmailByCRM(con, crmMedico);
+                        
+                        String subject = "Consulta agendada";
+                        String bodyPaciente = String.format("Olá, você agendou uma consulta com CRM %s no dia %s às %s.", crmMedico, dataConsulta, horario);
+                        String bodyMedico = String.format("Olá, você tem uma consulta agendada com o paciente CPF %s no dia %s às %s.", cpfPaciente, dataConsulta, horario);
+                        
+                        if (pacienteEmail != null) {
+                            EmailUtil.sendEmail(pacienteEmail, subject, bodyPaciente);
+                            System.out.println("Email enviado ao paciente");
+                        }
+                        if (medicoEmail != null) {
+                            EmailUtil.sendEmail(medicoEmail, subject, bodyMedico);
+                            System.out.println("Email enviado ao Medico");
+                        }
+                    } catch (MessagingException e) {
+                        request.setAttribute("errorMessage", "Erro ao enviar e-mail. Tente novamente mais tarde.");
+                        request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
+                        System.out.println(e.getMessage());
+                        return;
                     }
                 }
-        	}
-            
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
             request.setAttribute("errorMessage", "Erro ao agendar consulta: Verifique se os dados inseridos existem!");
             request.getRequestDispatcher("formConsultas.jsp").forward(request, response);
             return;
         }
 
         response.sendRedirect("formConsultas.jsp?success=true");
+    }
+    
+    private String getEmailByCPF(Connection con, String cpfPaciente) throws SQLException {
+        String sql = "SELECT Email FROM PACIENTE WHERE CPF = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, cpfPaciente);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Email");
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getEmailByCRM(Connection con, String crmMedico) throws SQLException {
+        String sql = "SELECT Email FROM MEDICO WHERE CRM = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, crmMedico);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Email");
+                }
+            }
+        }
+        return null;
     }
 }
