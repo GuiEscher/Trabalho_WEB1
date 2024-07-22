@@ -1,4 +1,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
 <% 
     // Recuperar mensagens de erro e sucesso (se houver)
     String errorMessage = (String) session.getAttribute("errorMessage");
@@ -27,7 +41,7 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
-    <title>Agendar Consulta</title>
+    <title><fmt:message key="pagina.pacientec.titulo"/></title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -166,21 +180,28 @@
 <body>
     <header>
         <div class="header-container">
-            <h1>Agendamento de Consultas Médicas</h1>
-            <a href="/home/listaConsultasPaciente" class="button">Voltar</a>
+            <h1><fmt:message key="pagina.pacientec.header"/></h1>
+            <a href="/home/listaConsultasPaciente" class="button"><fmt:message key="button.label.voltar"/></a>
         </div>
     </header>
-
+    
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+    
     <div class="container">
-        <h2>Agendar Consulta Médica</h2>
+        <h2><fmt:message key="pagina.pacientec.agendar"/></h2>
         <form name="consultaForm" action="${home}" method="post" onsubmit="return validarFormulario()">
             <div class="form-group">
-                <label for="CPF_Paciente">CPF do Paciente:</label>
+                <label for="CPF_Paciente"><fmt:message key="table.label.CPFPaciente"/>:</label>
                 <input type="text" id="CPF_Paciente" name="CPF_Paciente" value="${CPF}" readonly required>
             </div>
 
             <div class="form-group">
-                <label for="CRM_Medico">Médico:</label>
+                <label for="CRM_Medico"><fmt:message key="table.label.nomeMedico"/>:</label>
                 <select id="CRM_Medico" name="CRM_Medico" required>
                     <c:forEach var="medico" items="${Medicos}">
                         <option value="${medico.CRM}">${medico.nome}</option>
@@ -189,17 +210,18 @@
             </div>
 
             <div class="form-group">
-                <label for="Horario">Horário:</label>
+                <label for="Horario"><fmt:message key="table.label.horario"/>:</label>
                 <input type="text" id="Horario" name="Horario" required>
             </div>
 
             <div class="form-group">
-                <label for="DataConsulta">Data da Consulta:</label>
+                <label for="DataConsulta"><fmt:message key="table.label.data"/>:</label>
                 <input type="text" id="DataConsulta" name="DataConsulta" required>
             </div>
-
+			
+			<fmt:message key="pagina.pacientec.save" var="save"/>
             <div class="form-group">
-                <input type="submit" value="Agendar Consulta">
+                <input type="submit" value="${save}">
             </div>
         </form>
 
