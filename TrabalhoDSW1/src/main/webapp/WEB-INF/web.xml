@@ -119,4 +119,14 @@
     <servlet-name>EditaPacienteServlet</servlet-name>
     <url-pattern>/EditaPacienteServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditaMedicoServlet</display-name>
+    <servlet-name>EditaMedicoServlet</servlet-name>
+    <servlet-class>br.ufscar.dc.dsw.EditaMedicoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditaMedicoServlet</servlet-name>
+    <url-pattern>/EditaMedicoServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

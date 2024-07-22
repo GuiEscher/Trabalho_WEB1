@@ -43,8 +43,8 @@
                 <td>${medico.especialidade}</td>
                 <td>${medico.email}</td>
                 <td>
-                	<a href="#">Edita</a>
-					<a href="/home/removeMedico?CRM=${medico.CRM}">Remove</a></td>
+                	<a href="/home/editaMedico?CRM=${medico.CRM}">Edita </a>
+					<a href="/home/removeMedico?CRM=${medico.CRM}"> Remove</a></td>
             </tr>
         </c:forEach>
     </table>

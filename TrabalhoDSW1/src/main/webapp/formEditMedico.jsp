@@ -1,13 +1,14 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:url value="/cadastrarPaciente" var="home"/>
-<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");%>
+<c:url value="/editaMedico" var="cadastro"/>
+<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); %>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Cadastro de Paciente</title>
+    <meta charset="UTF-8">
+    <title>Edição de Médico</title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -60,7 +61,7 @@
             background-color: #f9f9f9;
         }
 
-        form input[type="text"], 
+        form input[type="text"],
         form input[type="password"] {
             width: calc(100% - 22px);
             padding: 10px;
@@ -89,35 +90,32 @@
 
 <body>
 
-  <% if (ADM_KEY == null) { %>
-        <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
-   <% } else { %>
-	<header>
+<% if (ADM_KEY == null) { %>
+    <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
+<% } else { %>
+
+    <header>
         <div class="header-container">
-            <h1>Cadatro de Pacientes</h1>
-            <a href="/home/listagemPacientes" class="button">Voltar</a>
+            <h1>Edição de Médico</h1>
+            <a href="/home/listagemMedicos" class="button">Voltar</a>
         </div>
     </header>
 
-    <form action="${ home }" method="post">
-        Nome: <input type="text" name="Nome">
+    <form action="${cadastro}" method="post">
+    	CRM: <input type="text" name="CRM" value="${medico.CRM}" readonly>
         <br/>
-        CPF: <input type="text" name="CPF">
+        Nome: <input type="text" name="Nome" value="${medico.nome}">
         <br/>
-        Telefone: <input type="text" name="Telefone">
+        Email: <input type="text" name="Email" value="${medico.email}">
         <br/>
-        Email: <input type="text" name="Email">
+        Senha: <input type="password" name="Senha" value="${medico.senha}">
         <br/>
-        Senha: <input type="password" name="Senha">
+        Especialidade: <input type="text" name="Especialidade" value="${medico.especialidade}">
         <br/>
-        Sexo (M ou F): <input type="text" name="Sexo">
-        <br/>
-        Data Nascimento: <input type="text" name="DataNascimento">
-        <br/>
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Salvar">
     </form>
-    
-    <% } %>
-</body>
 
+<% } %>
+
+</body>
 </html>

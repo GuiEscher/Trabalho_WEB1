@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:url value="/cadastrarPaciente" var="home"/>
+<c:url value="/editaPaciente" var="Salvar"/>
 <%String ADM_KEY = (String) session.getAttribute("ADM_KEY");%>
 
 <!DOCTYPE html>
@@ -7,7 +7,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Cadastro de Paciente</title>
+    <title>Editar Paciente</title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -94,27 +94,27 @@
    <% } else { %>
 	<header>
         <div class="header-container">
-            <h1>Cadatro de Pacientes</h1>
+            <h1>Edição de paciente</h1>
             <a href="/home/listagemPacientes" class="button">Voltar</a>
         </div>
     </header>
 
-    <form action="${ home }" method="post">
-        Nome: <input type="text" name="Nome">
+    <form action="${ Salvar }" method="post">
+    	CPF: <input type="text" name="CPF" value="${ paciente.CPF }" readonly>
         <br/>
-        CPF: <input type="text" name="CPF">
+        Nome: <input type="text" name="Nome" value="${ paciente.nome }">
         <br/>
-        Telefone: <input type="text" name="Telefone">
+        Telefone: <input type="text" name="Telefone" value="${ paciente.telefone }">
         <br/>
-        Email: <input type="text" name="Email">
+        Email: <input type="text" name="Email" value="${ paciente.email }">
         <br/>
-        Senha: <input type="password" name="Senha">
+        Senha: <input type="password" name="Senha" value="${ paciente.senha }">
         <br/>
-        Sexo (M ou F): <input type="text" name="Sexo">
+        Sexo: <input type="text" name="Sexo" value="${ paciente.sexo }">
         <br/>
-        Data Nascimento: <input type="text" name="DataNascimento">
+        Data Nascimento: <input type="text" name="DataNascimento" value="${ paciente.data_nascimento }">
         <br/>
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Salvar">
     </form>
     
     <% } %>
