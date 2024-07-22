@@ -1,7 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
 
 <c:url value="/login" var="linkServletLogin"/>
 
@@ -18,15 +34,22 @@
     <header>
         <div class="header-container">
             <h1>Consultas.com</h1>
-            <a href="/home/homepage" class="button">Homepage</a>
+            <a href="/home/homepage" class="button"><fmt:message key="header.button.homepage" /></a>
         </div>
+        
+    <form action="/home/mudaLinguagem" style="text-align:left">
+        <select id="lang" name="lang" onchange="submit()">
+            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+        </select>
+    </form>
+    
     </header>
-
     <div class="form-container">
     	<h2>Login</h2>
         <form action="${linkServletLogin}" method="post">
-            Email: <input type="text" name="email"/>
-            Senha: <input type="password" name="senha"/>
+            <fmt:message key="form.label.email" />: <input type="text" name="email"/>
+            <fmt:message key="form.label.senha" />: <input type="password" name="senha"/>
             <input type="submit" value="Login"/>
         </form>
         
@@ -35,7 +58,7 @@
             if (errorCode != null) {
                 if (errorCode.equals("1")) {
         %>
-            <div class="error-message">Email ou senha nÃ£o encontrados.</div>
+            <div class="error-message"><fmt:message key="error.login.1" />.</div>
         <%
                 }
             }

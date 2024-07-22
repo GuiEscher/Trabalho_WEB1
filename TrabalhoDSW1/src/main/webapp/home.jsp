@@ -1,11 +1,27 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<% 
+	String lang = (String) session.getAttribute("lang");
+	// Portugues por default
+	if (lang == null){
+		lang = "pt";
+		session.setAttribute("lang", lang);
+	}
+%>
+
+<fmt:setLocale value="${lang}" />
+<fmt:setBundle basename="linguagem"/>
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="http://localhost:8080/home/homepage">
-    <title>Consultas.com - Home</title>
+    <title><fmt:message key="pagina.home.titulo"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
    
     <script>
@@ -46,20 +62,32 @@
             <a href="/home/paginaLogin.jsp" class="button">Login</a>
             <a href="/home/logout" class="button">Logout</a>
         </div>
+        
+        <form action="/home/mudaLinguagem" style="text-align:left">
+	        <select id="lang" name="lang" onchange="submit()">
+	            <option value="pt" ${lang == 'pt' ? 'selected' : ''}>Português</option>
+	            <option value="en" ${lang == 'en' ? 'selected' : ''}>English</option>
+	        </select>
+	    </form>
+	    
     </header>
     
+    <!-- traducao para variavel -->
+    <fmt:message key="pagina.home.buscaesp" var="buscaesp"/>
+    <fmt:message key="pagina.home.buscabtn" var="buscabtn"/>
+    
     <div class="search-container">
-        <input type="text" name="Especialidade" placeholder="Pesquise uma especialidade">
-        <input type="button" value="Buscar" onclick="atualizarHref();">
+        <input type="text" name="Especialidade" placeholder="${buscaesp}">
+        <input type="button" value="${buscabtn}" onclick="atualizarHref();">
     </div>
 
-    <h2>Listagem de Médicos</h2>
+    <h2><fmt:message key="pagina.home.lista"/></h2>
 
     <table>
         <tr>
-            <th>Nome</th>
-            <th>CRM</th>
-            <th>Especialidade</th>
+            <th><fmt:message key="table.label.nomeMedico"/></th>
+            <th><fmt:message key="table.label.CRMMedico"/></th>
+            <th><fmt:message key="table.label.especialidade"/></th>
         </tr>
         <c:forEach var="medico" items="${Medicos}">
             <tr>
