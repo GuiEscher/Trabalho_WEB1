@@ -1,7 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:url value="/cadastrarPaciente" var="home"/>
-<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");
-  String errorMessage = (String) request.getAttribute("errorMessage"); 
+<c:url value="/editaMedico" var="cadastro"/>
+<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
+String errorMessage = (String) request.getAttribute("errorMessage"); 
 %>
 
 <!DOCTYPE html>
@@ -9,7 +10,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Cadastro de Paciente</title>
+    <title>Edição de Médico</title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -62,7 +63,7 @@
             background-color: #f9f9f9;
         }
 
-        form input[type="text"], 
+        form input[type="text"],
         form input[type="password"] {
             width: calc(100% - 22px);
             padding: 10px;
@@ -86,11 +87,25 @@
         form input[type="submit"]:hover {
             background-color: #002244;
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .success {
+            color: green;
+            font-size: 0.9em;
+        }
+
+        .field-error {
+            border-color: red;
+        }
     </style>
     <script>
         function validateForm() {
-            var form = document.forms["cadastroPaciente"];
-            var fields = ["Nome", "CPF", "Telefone", "Email", "Senha", "Sexo", "DataNascimento"];
+            var form = document.forms["medicoForm"];
+            var fields = ["Nome", "Email", "Senha", "Especialidade"];
             
             for (var i = 0; i < fields.length; i++) {
                 var field = form[fields[i]].value;
@@ -99,68 +114,36 @@
                     return false;
                 }
             }
-
-            var sexo = form["Sexo"].value;
-            if (sexo !== "M" && sexo !== "F") {
-                alert("Por favor, insira 'M' ou 'F' no campo Sexo.");
-                return false;
-            }
-
-            var dataNascimento = form["DataNascimento"].value;
-            if (!isValidDate(dataNascimento)) {
-                alert("Por favor, insira uma data v�lida no formato 'dd/mm/aaaa'.");
-                return false;
-            }
-
             return true;
-        }
-
-        function isValidDate(dateString) {
-            // Verifica se est� no formato dd/mm/aaaa
-            var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            if (!regex.test(dateString)) return false;
-
-            // Divide a data em partes
-            var parts = dateString.split("/");
-            var day = parseInt(parts[0], 10);
-            var month = parseInt(parts[1], 10);
-            var year = parseInt(parts[2], 10);
-
-            // Verifica a validade da data
-            var date = new Date(year, month - 1, day);
-            return date.getFullYear() === year && date.getMonth() + 1 === month && date.getDate() === day;
         }
     </script>
 </head>
 
 <body>
 
-  <% if (ADM_KEY == null) { %>
-        <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
-   <% } else { %>
+<% if (ADM_KEY == null) { %>
+    <c:redirect url="/paginaLogin.jsp?errorCode=1"/>
+<% } else { %>
+
     <header>
         <div class="header-container">
-            <h1>Cadastro de Pacientes</h1>
-            <a href="/home/listagemPacientes" class="button">Voltar</a>
+            <h1>Edição de Médico</h1>
+            <a href="/home/listagemMedicos" class="button">Voltar</a>
         </div>
     </header>
 
-    <form name="cadastroPaciente" action="${home}" method="post" onsubmit="return validateForm()">
-        Nome: <input type="text" name="Nome" maxlength="50">
+    <form name="medicoForm" action="${cadastro}" method="post" onsubmit="return validateForm()">
+        CRM: <input type="text" name="CRM" value="${medico.CRM}" readonly>
         <br/>
-        CPF: <input type="text" name="CPF" maxlength="11">
+        Nome: <input type="text" id="Nome" name="Nome" value="${medico.nome}" maxlength="50">
         <br/>
-        Telefone: <input type="text" name="Telefone" maxlength="15">
+        Email: <input type="text" id="Email" name="Email" value="${medico.email}" maxlength="60">
         <br/>
-        Email: <input type="text" name="Email" maxlength="60">
+        Senha: <input type="password" id="Senha" name="Senha" value="${medico.senha}" maxlength="20">
         <br/>
-        Senha: <input type="password" name="Senha" maxlength="20">
+        Especialidade: <input type="text" id="Especialidade" name="Especialidade" value="${medico.especialidade}" maxlength="20">
         <br/>
-        Sexo (M ou F): <input type="text" name="Sexo" maxlength="1">
-        <br/>
-        Data de Nascimento: <input type="text" name="DataNascimento" maxlength="10" placeholder="dd/mm/aaaa">
-        <br/>
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Salvar">
     </form>
     
     <div>
@@ -168,8 +151,8 @@
             <div class="error"><%= errorMessage %></div>
         <% } %>
     </div>
-    
-    <% } %>
-</body>
 
+<% } %>
+
+</body>
 </html>

@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:url value="/cadastrarPaciente" var="home"/>
-<%String ADM_KEY = (String) session.getAttribute("ADM_KEY");
-  String errorMessage = (String) request.getAttribute("errorMessage"); 
+<c:url value="/editaPaciente" var="Salvar"/>
+<% String ADM_KEY = (String) session.getAttribute("ADM_KEY"); 
+String errorMessage = (String) request.getAttribute("errorMessage"); 
 %>
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Cadastro de Paciente</title>
+    <title>Editar Paciente</title>
     <style>
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -62,7 +62,7 @@
             background-color: #f9f9f9;
         }
 
-        form input[type="text"], 
+        form input[type="text"],
         form input[type="password"] {
             width: calc(100% - 22px);
             padding: 10px;
@@ -86,11 +86,21 @@
         form input[type="submit"]:hover {
             background-color: #002244;
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .success {
+            color: green;
+            font-size: 0.9em;
+        }
     </style>
     <script>
         function validateForm() {
-            var form = document.forms["cadastroPaciente"];
-            var fields = ["Nome", "CPF", "Telefone", "Email", "Senha", "Sexo", "DataNascimento"];
+            var form = document.forms["pacienteForm"];
+            var fields = ["Nome", "Telefone", "Email", "Senha", "Sexo", "DataNascimento"];
             
             for (var i = 0; i < fields.length; i++) {
                 var field = form[fields[i]].value;
@@ -140,27 +150,27 @@
    <% } else { %>
     <header>
         <div class="header-container">
-            <h1>Cadastro de Pacientes</h1>
+            <h1>Edição de paciente</h1>
             <a href="/home/listagemPacientes" class="button">Voltar</a>
         </div>
     </header>
 
-    <form name="cadastroPaciente" action="${home}" method="post" onsubmit="return validateForm()">
-        Nome: <input type="text" name="Nome" maxlength="50">
+    <form name="pacienteForm" action="${Salvar}" method="post" onsubmit="return validateForm()">
+        CPF: <input type="text" name="CPF" value="${paciente.CPF}" readonly>
         <br/>
-        CPF: <input type="text" name="CPF" maxlength="11">
+        Nome: <input type="text" name="Nome" value="${paciente.nome}" maxlength="50">
         <br/>
-        Telefone: <input type="text" name="Telefone" maxlength="15">
+        Telefone: <input type="text" name="Telefone" value="${paciente.telefone}" maxlength="15">
         <br/>
-        Email: <input type="text" name="Email" maxlength="60">
+        Email: <input type="text" name="Email" value="${paciente.email}" maxlength="60">
         <br/>
-        Senha: <input type="password" name="Senha" maxlength="20">
+        Senha: <input type="password" name="Senha" value="${paciente.senha}" maxlength="20">
         <br/>
-        Sexo (M ou F): <input type="text" name="Sexo" maxlength="1">
+        Sexo: <input type="text" name="Sexo" value="${paciente.sexo}" maxlength="1">
         <br/>
-        Data de Nascimento: <input type="text" name="DataNascimento" maxlength="10" placeholder="dd/mm/aaaa">
+        Data Nascimento: <input type="text" name="DataNascimento" value="${paciente.data_nascimento}">
         <br/>
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Salvar">
     </form>
     
     <div>
@@ -169,7 +179,7 @@
         <% } %>
     </div>
     
-    <% } %>
+  <% } %>
 </body>
 
 </html>
